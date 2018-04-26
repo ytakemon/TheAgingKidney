@@ -2,7 +2,7 @@
 title: "Hello World"
 author: "Yuka Takemon"
 date: "4/26/2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
