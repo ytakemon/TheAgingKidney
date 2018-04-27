@@ -1,25 +1,23 @@
 ---
 title: "Histograms of ANOVA p-values"
 author: "Yuka Takemon"
-Last Update: Sys.Date()
-data: github_document
-output: 
-  html_document: 
-    keep_md: yes
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
 ---
-#  Histograms of ANOVA p-values
 
 For each gene and protein from the kidney RNA-seq and shotgun proteomics dataset, we fitted a linear model
-$$y_{i} \sim Age + Sex + Generation$$
+$$ y_{i} \sim Age + Sex + Generation $$
 and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The firgures below visualizes the distirbution of the tests' p-values and compares them between the effects Age, Sex, and Age:Sex interaction.
+
+We found that the effect of sex on mRNA was stronger than the effects of Age, which is to be expected. However we saw that the proteins seem to be strongly affected by both sex and age, which we suspect is due to batch a effect that unfortunately coincided with the age of the samples (not 100% overlap).
 ```{r setup environment, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(gridExtra)
 data_dir <- "~/Dropbox/TheAgingKidneyData"
-data <- read_csv(paste0(data_dir,"/ANOVA/kidney_anova_output.csv"))
+data <- read_csv(paste0(data_dir,"/ANOVA/kidney_anova_slope_output.csv"))
 ```
 
-```{r creating histograms}
+```{r creating histograms, echo=FALSE}
 # mRNA - Age
 pval_mRNA_age <- ggplot(data, aes(x=p.mRNA_Age.Sex)) +
     geom_histogram(binwidth=0.04) +
@@ -65,15 +63,25 @@ pval_protein_int <- ggplot(data, aes(x=p.Prot_Interaction)) +
 ```
 
 ## Effects on mRNA
-```{r plotting mRNA}
-grid.arrange(pval_mRNA_age, pval_mRNA_sex, pval_mRNA_int, ncol = 3)
+```{r plotting mRNA, echo = FALSE}
+grid.arrange(pval_mRNA_age, pval_mRNA_sex, ncol =2)
 ```
 
 ## Effects on protein 
-```{r plotting protein}
-grid.arrange(pval_protein_age, pval_protein_sex, pval_protein_int, ncol =3)
+```{r plotting protein, echo =FALSE}
+grid.arrange(pval_protein_age, pval_protein_sex, ncol = 2)
 ```
 
+## Effects of Age:Sex interaction of mRNA and protein
+```{r plotting age/sex interaction, echo = FALSE}
+grid.arrange(pval_mRNA_int, pval_protein_int, ncol=2)
+```
+
+## Session Information
+
+```{r session-info}
+sessionInfo()
+```
 
 
 
