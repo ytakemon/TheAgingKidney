@@ -12,6 +12,7 @@ We will be using the recorded slope and p-value from each mRNA and protein in th
 ## Running ANOVA
 The following bash script is designed to submit the ANOVA R script to the cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. The .Rdata and Rscirpt can be found <span style="color:red">HERE (insert R script later)</span>
 
+<span style="color:red">Link to Rmd page</span>
 ```{bash qsub, eval=FALSE}
 qsub -v I="./DO188b_kidney_noprobs.RData ./kidney_anova_slope_output.csv",script=anova_tests_slope_pairs Rsubmit_args.sh
 ```
@@ -33,4 +34,4 @@ R --no-save --args ${I} < ${script}.R > ${script}.Rout
 
 <span style="color:red">Link to ANOVA histogram page</span>
 
-
+<span style="color:red">Link to direction of change page</span>

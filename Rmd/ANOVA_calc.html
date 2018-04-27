@@ -129,6 +129,7 @@ $(document).ready(function () {
 <div id="running-anova" class="section level2">
 <h2>Running ANOVA</h2>
 <p>The following bash script is designed to submit the ANOVA R script to the cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. The .Rdata and Rscirpt can be found <span style="color:red">HERE (insert R script later)</span></p>
+<p><span style="color:red">Link to Rmd page</span></p>
 <pre class="bash"><code>qsub -v I=&quot;./DO188b_kidney_noprobs.RData ./kidney_anova_slope_output.csv&quot;,script=anova_tests_slope_pairs Rsubmit_args.sh</code></pre>
 <p>This will submit the R script to another script Rsubmit_args.sh, which will run the R script in the R environemnt within the allocated resource.</p>
 <pre class="bash"><code>#!/bin/bash -l
@@ -143,6 +144,7 @@ module load R/3.3.2
 # I is the input variable
 R --no-save --args ${I} &lt; ${script}.R &gt; ${script}.Rout</code></pre>
 <p><span style="color:red">Link to ANOVA histogram page</span></p>
+<p><span style="color:red">Link to direction of change page</span></p>
 </div>
 
 
