@@ -1,0 +1,93 @@
+---
+title: "Histograms of ANOVA p-values"
+author: "Yuka Takemon"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+For each gene that we have both mRNA and protein expression data, we fitted a linear model
+$$ y_{i} \sim Age + Sex + Generation $$
+and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The firgures below visualizes the distirbution of the tests' p-values and compares them between the effects Age, Sex, and Age:Sex interaction.
+
+We found that the effect of sex on mRNA was stronger than the effects of Age, which is to be expected. However we saw that the proteins seem to be strongly affected by both sex and age, which we suspect is due to batch a effect that unfortunately coincided with the age of the samples (not 100% overlap).
+
+<span style="color:red">Link to Rmd page</span>
+```{r setup environment, echo=FALSE, message=FALSE}
+# set directory
+setwd("~/Dropbox/TheAgingKidneyData")
+
+# load libraries and data
+library(tidyverse)
+library(gridExtra)
+data <- read_csv("./ANOVA/kidney_anova_slope_output.csv")
+```
+
+```{r creating histograms, echo=FALSE}
+# mRNA - Age
+pval_mRNA_age <- ggplot(data, aes(x=p.mRNA_Age.Sex)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/Age",
+         x="p-value")
+# protein - Age
+pval_protein_age <- ggplot(data, aes(x=p.Prot_Age.Sex)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/Age",
+         x="p-value")
+# mRNA - Sex
+pval_mRNA_sex <- ggplot(data, aes(x=p.mRNA_Sex.Age)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/Sex",
+         x="p-value")
+# protein - Sex
+pval_protein_sex <- ggplot(data, aes(x=p.Prot_Sex.Age)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/Sex",
+         x="p-value")
+# mRNA - Age:Sex Interaction
+pval_mRNA_int <- ggplot(data, aes(x=p.mRNA_Interaction)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/(Age*Sex)",
+         x="p-value")
+# protein - Age:Sex Interaction
+pval_protein_int <- ggplot(data, aes(x=p.Prot_Interaction)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/(Age*Sex)",
+         x="p-value")
+```
+
+## Effects on mRNA
+```{r plotting mRNA, echo = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_mRNA_age, pval_mRNA_sex, ncol =2)
+```
+
+## Effects on protein 
+```{r plotting protein, echo =FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_protein_age, pval_protein_sex, ncol = 2)
+```
+
+## Effects of Age:Sex interaction on mRNA and protein
+```{r plotting age/sex interaction, echo = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_mRNA_int, pval_protein_int, ncol=2)
+```
+
+## Session Information
+
+```{r session-info}
+sessionInfo()
+```
+
+
+
+
