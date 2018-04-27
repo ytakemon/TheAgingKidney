@@ -1,7 +1,7 @@
 ---
 title: "The Aging Kidney Analysis"
 ---
-## Under development.....
+Still developing contents
 
 * [Calculating the effects of Age and Sex on mRNA and protein expression](Rmd/ANOVA_calc.html)
 * [Histograms of p-values from ANOVA tests](Rmd/ANOVA_histograms.html)
