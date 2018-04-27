@@ -10,4 +10,5 @@ navbar:
     - text: "Data"
       href: data.html
     - text: "Analysis"
-      hred: analysis.html
+      href: analysis.html
+
