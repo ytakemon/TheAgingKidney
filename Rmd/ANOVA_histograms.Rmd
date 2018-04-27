@@ -5,7 +5,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
-For each gene and protein from the kidney RNA-seq and shotgun proteomics dataset, we fitted a linear model
+For each gene that we have both mRNA and protein expression data, we fitted a linear model
 $$ y_{i} \sim Age + Sex + Generation $$
 and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The firgures below visualizes the distirbution of the tests' p-values and compares them between the effects Age, Sex, and Age:Sex interaction.
 
