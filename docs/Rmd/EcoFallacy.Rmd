@@ -1,0 +1,155 @@
+---
+title: "The Ecological Fallacy"
+author: "Yuka Takemon"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as "The ecological fallacy", whereby total correlation is not the same as individual group correlation. 
+
+```{r pressure, echo=FALSE, out.width = '80%'}
+knitr::include_graphics("images/EcoFallacy.png")
+```
+
+## An example of Slc9a3
+Slc9a3 was highlighted in our manuscript as a gene found to have decreasing mRNA but increasing protein with age. Slc9a3 is a gene that encodes for a Na/H exchange found on the brush boarder of the proximal tubule. Although the total changes show that Slc9a3 mRNA is decreasing with age and SLC9A3 proteins are increasing with age, we find that on a individual group level (by sex and age) they are similarly positively correlated.
+```{r setup, echo = FALSE, message = FALSE}
+# Set directory
+setwd("~/Dropbox/TheAgingKidneyData")
+
+# Load library and data
+library(tidyverse)
+library(gridExtra)
+library(ggsci)
+load("./RData/DO188b_kidney_noprobs.RData")
+
+# remove unnecesary data
+rm(covar, G, Glist, N, raw.mrna, raw.protein,snps)
+```
+
+```{r create shortcut function, echo = FALSE, message= FALSE}
+get.gene <- function(gene.symbol){
+  
+  # pull covariates and convert to factors
+  # note Age is numeric and fAge is factor
+  Mouse.ID <- rownames(annot.samples)
+  Sex <- factor(as.character(model.matrix(~annot.samples[,"Sex"])[,2]+1), levels=c("1","2"), labels=c("F","M"))
+  Age <- annot.samples$Age
+  fAge <- factor(as.character(Age),levels=c("6","12","18"))
+
+  #pull gene identifiers from mrna and protein annotations
+  mrna.id <- annot.mrna[annot.mrna$symbol==gene.symbol,"id"]
+  protein.id <- annot.protein[annot.protein$symbol==gene.symbol,"id"]
+
+  # strat building the tiblle to hold data
+  my.data <- data_frame(Mouse.ID=Mouse.ID,
+                        Sex=Sex,
+                        Age=Age,
+                        fAge=fAge)
+  # add RNA and Protein columns to the tibble - if it exists
+  if(length(mrna.id)>0){
+    my.data <- mutate(my.data, RNA=expr.mrna[,mrna.id])
+  }
+  if(length(protein.id)>0){
+    my.data <- mutate(my.data, Protein=expr.protein[,protein.id])
+  }
+  # return value is a tibble with covariates, RNA and Protein data
+  my.data
+}
+```
+
+```{r Example Eco Fallacies, echo = FALSE, message= FALSE}
+# 6 examples:
+
+# Slc9a3
+df <- get.gene("Slc9a3") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Slc9a3 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Slc9a3 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "SLC9A3 expression (Rank normalized protein)",
+        x = "Slc9a3 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+
+# Slc5a12
+df <- get.gene("Slc5a12") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Slc5a12 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Slc5a12 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "SLC5A12 expression (Rank normalized protein)",
+        x = "Slc5a12 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+
+# Flot1
+df <- get.gene("Flot1") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Flot1 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Flot1 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "FLOT1 expression (Rank normalized protein)",
+        x = "Flot1 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+```
+
+```{r plot from paper, echo = FALSE, message = FALSE, fig.height = 5, fig.width= 5, fig.align = "center"}
+# Example from paper
+print(Slc9a3)
+```
+
+## Best examples 
+We picked Slc5a12 and Flot1 as the best examples of this ecological fallacy.  
+  
+Slc5a12 is an example whereby the mRNA expression decreased and the protein expression increased with age. As you can see there is not shift at 6 and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression. Again, note that the individual group level are similarly positively correlated.  
+  
+Flot1 is an example where by the mRNA expression increases with age and the protein expression decreases with age. You can observe the down and rightward shift of the lines with age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age.
+
+```{r best examples, echo = FALSE, message = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+# Example from paper
+grid.arrange(Slc5a12, Flot1, ncol=2)
+```
