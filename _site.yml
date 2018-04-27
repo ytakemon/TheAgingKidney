@@ -1,9 +1,13 @@
 output_dir: "docs"
-name: "my-website"
+name: "TheAgingKidneyProfiles"
 navbar:
-  title: "My Website"
+  title: "The Aging Kidney Profiles"
   left:
     - text: "Home"
       href: index.html
     - text: "About"
       href: about.html
+    - text: "Data"
+      href: data.html
+    - text: "Analysis"
+      hred: analysis.html
