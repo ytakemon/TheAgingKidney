@@ -7,7 +7,9 @@ output: html_document
 
 For each gene that we have both mRNA and protein expression data, we fitted a linear model
 $$ y_{i} \sim Age + Sex + Generation $$
-and then tested the significance of the effects Age and recorded its p-values and slope. For the 6667 genes for which we have both mRNA and protein expression data, we can illustrate the expressions change with age and identify those that are significant.  
+and then tested the significance of the effects Age and recorded its p-values and slope. For the 6667 genes for which we have both mRNA and protein expression data, we can illustrate the distinct changes in expression with age and identify those that are significant.
+
+In our manuscript we analysed the significant quadrants, coloured in purple below, using the Ingenuity Pathway Analyais (IPA) to identify enriched biological pathways. To see our findings please refer to our manuscript. 
 
 <span style="color:red">Link to Rmd page</span>
 \  
