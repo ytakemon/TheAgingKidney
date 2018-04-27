@@ -12,14 +12,10 @@ output:
 For each gene and protein from the kidney RNA-seq and shotgun proteomics dataset, we fitted a linear model
 $$y_{i} \sim Age + Sex + Generation$$
 and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The firgures below visualizes the distirbution of the tests' p-values and compares them between the effects Age, Sex, and Age:Sex interaction.
-```{r setup environment, echo=FALSE, message=FALSE}
-library(tidyverse)
-library(gridExtra)
-data_dir <- "~/Dropbox/TheAgingKidneyData"
-data <- read_csv(paste0(data_dir,"/ANOVA/kidney_anova_output.csv"))
-```
 
-```{r creating histograms}
+
+
+```r
 # mRNA - Age
 pval_mRNA_age <- ggplot(data, aes(x=p.mRNA_Age.Sex)) +
     geom_histogram(binwidth=0.04) +
@@ -65,14 +61,20 @@ pval_protein_int <- ggplot(data, aes(x=p.Prot_Interaction)) +
 ```
 
 ## Effects on mRNA
-```{r plotting mRNA}
+
+```r
 grid.arrange(pval_mRNA_age, pval_mRNA_sex, pval_mRNA_int, ncol = 3)
 ```
 
+![](ANOVA_histograms_files/figure-html/plotting mRNA-1.png)<!-- -->
+
 ## Effects on protein 
-```{r plotting protein}
+
+```r
 grid.arrange(pval_protein_age, pval_protein_sex, pval_protein_int, ncol =3)
 ```
+
+![](ANOVA_histograms_files/figure-html/plotting protein-1.png)<!-- -->
 
 
 
