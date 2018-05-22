@@ -1,14 +1,2 @@
 output_dir: "docs"
-name: "TheAgingKidneyProfiles"
-navbar:
-  title: "The Aging Kidney Profiles"
-  left:
-    - text: "Home"
-      href: index.html
-    - text: "About"
-      href: about.html
-    - text: "Data"
-      href: data.html
-    - text: "Analysis"
-      href: analysis.html
-
+name: "TheAgingKidney"

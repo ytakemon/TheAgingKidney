@@ -1,5 +1,6 @@
 ---
 title: "The Aging Kidney Data"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
 Data will be uploaded when publication is ready

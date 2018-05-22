@@ -1,9 +1,341 @@
 ---
-title: "The Aging Kidney Analysis"
+title: "The Aging Kidney Analyses"
+author: "Yuka Takemon"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    html_document:
+      toc: true
+      toc_float:
+        collapsed: false
+        smooth_scroll: false
 ---
-Still developing contents
 
-* [Calculating the effects of Age and Sex on mRNA and protein expression](Rmd/ANOVA_calc.html)
-* [Histograms of p-values from ANOVA tests](Rmd/ANOVA_histograms.html)
-* [How does mRNA and protein expression change with age?](Rmd/Slope_analysis.html)
-* [Ecological Fallacy!](Rmd/EcoFallacy.html)
+# Calculating ANOVAs
+For each gene that we have both mRNA and protein expression data, we fitted a linear model
+$$ y_{i} \sim Age + Sex + Generation $$
+We will be using the recorded slope and p-value from each mRNA and protein in the downstream processes.
+
+### Running ANOVA script
+The following bash script is designed to submit the ANOVA R script to the cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. The .Rdata and Rscirpt can be found <span style="color:red">HERE (insert R script later)</span>
+
+<span style="color:red">Link to Rmd page</span>
+```{bash qsub, eval=FALSE}
+qsub -v I="./DO188b_kidney_noprobs.RData ./kidney_anova_slope_output.csv",script=anova_tests_slope_pairs Rsubmit_args.sh
+```
+This will submit the R script to another script Rsubmit_args.sh, which will run the R script in the R environemnt within the allocated resource. 
+
+```{bash Rsubmit, eval=FALSE}
+#!/bin/bash -l
+#PBS -l nodes=1:ppn=3,walltime=03:00:00
+
+# Usage:
+# qsub -v I=${from list},script=${R script name} Rsubmit_multiple.R
+
+cd /projects/korstanje-lab/ytakemon/JAC_DO_Kidney/Scripts/ANOVA
+module load R/3.3.2
+
+# I is the input variable
+R --no-save --args ${I} < ${script}.R > ${script}.Rout
+```
+
+<span style="color:red">Link to ANOVA histogram page</span>
+
+<span style="color:red">Link to direction of change page</span>   
+
+\pagebreak
+
+# Histograms of ANOVA p-values
+For each gene that we have both mRNA and protein expression data, we fitted a linear model
+$$ y_{i} \sim Age + Sex + Generation $$
+and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The firgures below visualizes the distirbution of the tests' p-values and compares them between the effects Age, Sex, and Age:Sex interaction.
+
+We found that the effect of sex on mRNA was stronger than the effects of Age, which is to be expected. However we saw that the proteins seem to be strongly affected by both sex and age, which we suspect is due to batch a effect that unfortunately coincided with the age of the samples (not 100% overlap).
+
+<span style="color:red">Link to Rmd page</span>
+```{r setup environment, echo=FALSE, message=FALSE}
+# set directory
+setwd("~/Dropbox/TheAgingKidneyData")
+
+# load libraries and data
+library(tidyverse)
+library(gridExtra)
+data <- read_csv("./ANOVA/kidney_anova_slope_output.csv")
+```
+
+```{r creating histograms, echo=FALSE}
+# mRNA - Age
+pval_mRNA_age <- ggplot(data, aes(x=p.mRNA_Age.Sex)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/Age",
+         x="p-value")
+# protein - Age
+pval_protein_age <- ggplot(data, aes(x=p.Prot_Age.Sex)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/Age",
+         x="p-value")
+# mRNA - Sex
+pval_mRNA_sex <- ggplot(data, aes(x=p.mRNA_Sex.Age)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/Sex",
+         x="p-value")
+# protein - Sex
+pval_protein_sex <- ggplot(data, aes(x=p.Prot_Sex.Age)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/Sex",
+         x="p-value")
+# mRNA - Age:Sex Interaction
+pval_mRNA_int <- ggplot(data, aes(x=p.mRNA_Interaction)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="mRNA/(Age*Sex)",
+         x="p-value")
+# protein - Age:Sex Interaction
+pval_protein_int <- ggplot(data, aes(x=p.Prot_Interaction)) +
+    geom_histogram(binwidth=0.04) +
+    theme_bw() +
+    labs(title="Kidney",
+         subtitle="Protein/(Age*Sex)",
+         x="p-value")
+```
+
+### Effects on mRNA
+```{r plotting mRNA, echo = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_mRNA_age, pval_mRNA_sex, ncol =2)
+```
+
+### Effects on protein 
+```{r plotting protein, echo =FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_protein_age, pval_protein_sex, ncol = 2)
+```
+
+### Effects of Age:Sex interaction on mRNA and protein
+```{r plotting age/sex interaction, echo = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+grid.arrange(pval_mRNA_int, pval_protein_int, ncol=2)
+```
+
+# Direction of Change with Age
+For each gene that we have both mRNA and protein expression data, we fitted a linear model
+$$ y_{i} \sim Age + Sex + Generation $$
+and then tested the significance of the effects Age and recorded its p-values and slope. For the 6667 genes for which we have both mRNA and protein expression data, we can illustrate the distinct changes in expression with age and identify those that are significant.
+
+In our manuscript we analysed the significant quadrants, coloured in purple below, using the Ingenuity Pathway Analyais (IPA) to identify enriched biological pathways. To see our findings please refer to our manuscript. 
+
+<span style="color:red">Link to Rmd page</span>
+\  
+\      
+```{r setup, echo=FALSE, message=FALSE}
+# Set directory
+setwd("~/Dropbox/TheAgingKidneyData")
+
+# Load library and data
+load("./RData/DO188b_kidney_noprobs.RData")
+data <- read_csv("./ANOVA/kidney_anova_slope_output.csv")
+```
+
+```{r plotting, echo = FALSE, message=FALSE, fig.height = 7, fig.width= 7, fig.align = "center"}
+# For only slopes and sigcols
+mcols <- grep("^m.", colnames(data))
+sigcols <- grep("^p.", colnames(data))
+data <- data[, c(1:8, mcols, sigcols)]
+
+# Age (not interacting with sex)------------------------------------------------
+# Using only age realated mRNA and Protein that are significant < 0.05
+df_age <- data[data$p.mRNA_Age.Sex <= 0.05,]
+df_age <- df_age[df_age$p.Prot_Age.Sex <= 0.05,]
+# N = 693
+
+# Count number of genes in each quadrant
+# mRNA-Protein
+total <- nrow(df_age)
+quadI <- nrow(df_age[((df_age$m.mRNA_Age.Sex > 0) & (df_age$m.Prot_Age.Sex > 0)),])
+quadIV <- nrow(df_age[((df_age$m.mRNA_Age.Sex > 0) & (df_age$m.Prot_Age.Sex < 0)),])
+quadII <- nrow(df_age[((df_age$m.mRNA_Age.Sex < 0) & (df_age$m.Prot_Age.Sex > 0)),])
+quadIII <- nrow(df_age[((df_age$m.mRNA_Age.Sex < 0) & (df_age$m.Prot_Age.Sex < 0)),])
+
+# Plot age realted mRNA/Protein slopes
+ggplot() +
+      geom_point(data = data, aes(x = m.mRNA_Age.Sex, y = m.Prot_Age.Sex), colour =  "#64676d", alpha = 0.3) +
+      geom_point(data = df_age, aes(x = m.mRNA_Age.Sex, y = m.Prot_Age.Sex), colour = "#66125c") +
+      scale_x_continuous("mRNA-Age.Sex",
+                         breaks = seq(-1, 1, by = 0.1)) +
+      scale_y_continuous("Protein-Age.Sex",
+                         breaks = seq(-1, 1, by = 0.1)) +
+      geom_vline(xintercept = 0) +
+      geom_hline(yintercept = 0) +
+      labs( title = "Direction of change in gene expression with Age",
+            subtitle = paste0("Slope: RNA v. Protein, Total = ", total, ", Sig = ", nrow(df_age))) +
+      annotate("text", x = 0.25, y = 0.85, label = paste("A = ", quadI)) +
+      annotate("text", x = 0.25, y = -0.85, label = paste("C = ", quadIV)) +
+      annotate("text", x = -0.25, y = 0.85, label = paste("D = ", quadII)) +
+      annotate("text", x = -0.25, y = -0.85, label = paste("B = ", quadIII)) +
+      theme(panel.background = element_blank(),
+            panel.border = element_rect( colour = "black", fill = NA))
+```
+
+<span style="color:red">Link to output file that'll need to be incorporated</span>
+
+
+
+# The Ecological Fallacy
+Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as "The ecological fallacy", whereby total correlation is not the same as individual group correlation. 
+
+```{r pressure, echo=FALSE, out.width = '80%'}
+knitr::include_graphics("images/EcoFallacy.png")
+```
+
+### An example of Slc9a3
+Slc9a3 was highlighted in our manuscript as a gene found to have decreasing mRNA but increasing protein with age. Slc9a3 is a gene that encodes for a Na/H exchange found on the brush boarder of the proximal tubule. Although the total changes show that Slc9a3 mRNA is decreasing with age and SLC9A3 proteins are increasing with age, we find that on a individual group level (by sex and age) they are similarly positively correlated.
+```{r setup eco, echo = FALSE, message = FALSE}
+# Set directory
+setwd("~/Dropbox/TheAgingKidneyData")
+
+# Load library and data
+library(ggsci)
+load("./RData/DO188b_kidney_noprobs.RData")
+
+# remove unnecesary data
+rm(covar, G, Glist, N, raw.mrna, raw.protein,snps)
+```
+
+```{r create shortcut function, echo = FALSE, message= FALSE}
+get.gene <- function(gene.symbol){
+  
+  # pull covariates and convert to factors
+  # note Age is numeric and fAge is factor
+  Mouse.ID <- rownames(annot.samples)
+  Sex <- factor(as.character(model.matrix(~annot.samples[,"Sex"])[,2]+1), levels=c("1","2"), labels=c("F","M"))
+  Age <- annot.samples$Age
+  fAge <- factor(as.character(Age),levels=c("6","12","18"))
+
+  #pull gene identifiers from mrna and protein annotations
+  mrna.id <- annot.mrna[annot.mrna$symbol==gene.symbol,"id"]
+  protein.id <- annot.protein[annot.protein$symbol==gene.symbol,"id"]
+
+  # strat building the tiblle to hold data
+  my.data <- data_frame(Mouse.ID=Mouse.ID,
+                        Sex=Sex,
+                        Age=Age,
+                        fAge=fAge)
+  # add RNA and Protein columns to the tibble - if it exists
+  if(length(mrna.id)>0){
+    my.data <- mutate(my.data, RNA=expr.mrna[,mrna.id])
+  }
+  if(length(protein.id)>0){
+    my.data <- mutate(my.data, Protein=expr.protein[,protein.id])
+  }
+  # return value is a tibble with covariates, RNA and Protein data
+  my.data
+}
+```
+
+```{r Example Eco Fallacies, echo = FALSE, message= FALSE}
+# 6 examples:
+
+# Slc9a3
+df <- get.gene("Slc9a3") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Slc9a3 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Slc9a3 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "SLC9A3 expression (Rank normalized protein)",
+        x = "Slc9a3 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+
+# Slc5a12
+df <- get.gene("Slc5a12") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Slc5a12 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Slc5a12 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "SLC5A12 expression (Rank normalized protein)",
+        x = "Slc5a12 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+
+# Flot1
+df <- get.gene("Flot1") %>%
+  mutate(
+    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
+
+df_summary <- df %>%
+  group_by(Sex, fAge) %>%
+  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
+    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
+  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
+
+Flot1 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
+  geom_point(size=4) +
+  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
+  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
+  geom_point(data=df, aes(x=RNA, y=Protein)) +
+  geom_line(data=df, aes(x = RNA, y = Fitted)) +
+  labs( title = "Flot1 mRNA v. Protein Expression by Age",
+        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
+        y = "FLOT1 expression (Rank normalized protein)",
+        x = "Flot1 expression (Rank normalized mRNA)",
+        color = "Age") +
+  theme_bw() +
+  scale_colour_aaas()
+```
+
+```{r plot from paper, echo = FALSE, message = FALSE, fig.height = 5, fig.width= 5, fig.align = "center"}
+# Example from paper
+print(Slc9a3)
+```
+
+### Best examples 
+We picked Slc5a12 and Flot1 as the best examples of this ecological fallacy.  
+  
+Slc5a12 is an example whereby the mRNA expression decreased and the protein expression increased with age. As you can see there is not shift at 6 and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression. Again, note that the individual group level are similarly positively correlated.  
+  
+Flot1 is an example where by the mRNA expression increases with age and the protein expression decreases with age. You can observe the down and rightward shift of the lines with age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age.
+
+```{r best examples, echo = FALSE, message = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
+# Example from paper
+grid.arrange(Slc5a12, Flot1, ncol=2)
+```
+
+### Session Information
+
+```{r session-info}
+sessionInfo()
+```
+

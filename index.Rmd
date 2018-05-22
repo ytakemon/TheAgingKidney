@@ -1,7 +1,7 @@
 ---
 title: "The Aging Kidney Home Page"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
-Hello, Website!
-\  
+Hello, Website!   
 Contents will be filled soon.

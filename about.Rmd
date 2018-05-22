@@ -1,5 +1,6 @@
 ---
-title: "About The Aging Kidney Website"
+title: "About The Aging Kidney"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
 More about this website to come
