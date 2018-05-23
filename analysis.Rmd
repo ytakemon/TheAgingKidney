@@ -206,6 +206,7 @@ load("./RData/DO188b_kidney_noprobs.RData")
 rm(covar, G, Glist, N, raw.mrna, raw.protein,snps)
 ```
 
+
 ```{r create shortcut function, echo = FALSE, message= FALSE}
 get.gene <- function(gene.symbol){
   
@@ -236,6 +237,7 @@ get.gene <- function(gene.symbol){
   my.data
 }
 ```
+
 
 ```{r Example Eco Fallacies, echo = FALSE, message= FALSE}
 # 6 examples:
@@ -320,6 +322,9 @@ Flot1 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size
 # Example from paper
 print(Slc9a3)
 ```
+
+Although for us Slc9a3 is a biologically interesting gene, it's difficult to see the ecological fallacy. Below are some clear examples.  
+
 
 ### Best examples 
 We picked Slc5a12 and Flot1 as the best examples of this ecological fallacy.  
