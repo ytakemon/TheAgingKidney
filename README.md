@@ -1,3 +1,3 @@
-# TheAgingKidneyProfiles
+# The Aging Kidney
 
-Testing repo
+Github page hosting reproducible results for the upcoming Aging Kidney publication.
