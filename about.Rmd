@@ -1,5 +1,5 @@
 ---
-title: "About The Aging Kidney"
+title: "About"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
