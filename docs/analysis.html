@@ -282,7 +282,6 @@ div.tocify {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="data.html">Data</a></li>
         <li><a href="analysis.html">Analyses</a></li>
@@ -300,108 +299,103 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analyses</h1>
 <h4 class="author"><em>Yuka Takemon</em></h4>
-<h4 class="date"><em>14 June, 2018</em></h4>
+<h4 class="date"><em>05 October, 2018</em></h4>
 
 </div>
 
 
-<div id="calculating-anovas" class="section level1">
-<h1><span class="header-section-number">1</span> Calculating ANOVAs</h1>
-<p>For each gene that we have both mRNA and protein expression data, we fitted a linear model <span class="math display">\[ y_{i} \sim Age + Sex + Generation \]</span> We will be using the recorded slope and p-value from each mRNA and protein in the downstream processes.</p>
-<div id="running-anova-script" class="section level2">
-<h2><span class="header-section-number">1.1</span> Running ANOVA script</h2>
-<p>The following bash script is designed to submit the ANOVA R script to the cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. The .Rdata and Rscirpt can be found <span style="color:red">HERE (insert R script later)</span></p>
-<p><span style="color:red">Link to Rmd page</span></p>
-<pre class="bash"><code>qsub -v I=&quot;./DO188b_kidney_noprobs.RData ./kidney_anova_slope_output.csv&quot;,script=anova_tests_slope_pairs Rsubmit_args.sh</code></pre>
-<p>This will submit the R script to another script Rsubmit_args.sh, which will run the R script in the R environment within the allocated resource.</p>
-<pre class="bash"><code>#!/bin/bash -l
-#PBS -l nodes=1:ppn=3,walltime=03:00:00
-
-# Usage:
-# qsub -v I=${from list},script=${R script name} Rsubmit_multiple.R
-
-cd /projects/korstanje-lab/ytakemon/JAC_DO_Kidney/Scripts/ANOVA
-module load R/3.3.2
-
-# I is the input variable
-R --no-save --args ${I} &lt; ${script}.R &gt; ${script}.Rout</code></pre>
-<p><span style="color:red">Link to ANOVA histogram page</span></p>
-<p><span style="color:red">Link to direction of change page</span></p>
+<p><strong>TODO LIST:</strong> * upload data and scripts * change paths to uploaded data</p>
 <p><br> <br> <br></p>
+<div id="overall-study-design" class="section level1">
+<h1><span class="header-section-number">1</span> Overall study design</h1>
+<p>We collected kidneys from 188 Diversity Outbred, 93 females and 95 males, mice at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels).</p>
+<p><img src="images/StudyDesign.png" width="80%" /></p>
 </div>
+<div id="mrna-and-protein-that-change-with-age" class="section level1">
+<h1><span class="header-section-number">2</span> mRNA and protein that change with age</h1>
+<p>We fitted a linear model for all 6,667 genes with both mRNA and protein expression information.</p>
+<p><span class="math display">\[ y_{i} \sim Age + Sex + Generation \]</span> From linear model, we recorded slope and p-value generated from each mRNA and protein in the downstream processes. Additionally for a subset of genes with both mRNA and protein information, we also extracted the slope coefficient from.</p>
+<div id="running-linear-regression-script" class="section level2">
+<h2><span class="header-section-number">2.1</span> Running linear regression script</h2>
+<p>The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order.</p>
+<p>The files needed are provided <span style="color:red"> HERE:</span></p>
+<ul>
+<li>DO188b_kidney_noprobs.RData</li>
+<li>anova_tests_slope_pairs.R</li>
+<li>Rsubmit_args.sh</li>
+</ul>
+<pre class="bash"><code># Make sure correct paths and used and paste below into cluster to run:
+
+qsub -v I=&quot;./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_slope_output.csv&quot;,script=anova_tests_slope_pairs Rsubmit_args.sh</code></pre>
 </div>
-<div id="histograms-of-anova-p-values" class="section level1">
-<h1><span class="header-section-number">2</span> Histograms of ANOVA p-values</h1>
-<p>For each gene that we have both mRNA and protein expression data, we fitted a linear model <span class="math display">\[ y_{i} \sim Age + Sex + Generation \]</span> and then tested the significance of the effects Age, Sex, and Age:Sex interaction. The figures below visualizes the distribution of the tests’ p-values and compares them between the effects Age, Sex, and Age:Sex interaction.</p>
-<p>We found that the effect of sex on mRNA was stronger than the effects of Age, which is to be expected. However we saw that the proteins seem to be strongly affected by both sex and age, which we suspect is due to batch a effect that unfortunately coincided with the age of the samples (not 100% overlap).</p>
-<p><span style="color:red">Link to Rmd page</span></p>
-<div id="effects-on-mrna" class="section level2">
-<h2><span class="header-section-number">2.1</span> Effects on mRNA</h2>
-<p><img src="analysis_files/figure-html/plotting%20mRNA-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div id="histograms-of-p-values" class="section level2">
+<h2><span class="header-section-number">2.2</span> Histograms of p-values</h2>
+<p>The figures below visualizes the distribution of p-values that incdicates whether the gene have significant changes in mRNA/protein as a result of age, sex, and age:sex interaction.</p>
+<p>We found that sex effect on mRNA was stronger than the effects of Age, which is to be expected. We also saw that the proteins seem to be strongly affected by both sex and age.</p>
+<div id="effects-on-mrna" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Effects on mRNA</h3>
+<p><img src="analysis_files/figure-html/ANOVA_sex_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 <div id="effects-on-protein" class="section level2">
-<h2><span class="header-section-number">2.2</span> Effects on protein</h2>
-<p><img src="analysis_files/figure-html/plotting%20protein-1.png" width="960" style="display: block; margin: auto;" /></p>
+<h2><span class="header-section-number">2.3</span> Effects on protein</h2>
+<p><img src="analysis_files/figure-html/ANOVA_age_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
-<div id="effects-of-agesex-interaction-on-mrna-and-protein" class="section level2">
-<h2><span class="header-section-number">2.3</span> Effects of Age:Sex interaction on mRNA and protein</h2>
-<p><img src="analysis_files/figure-html/plotting%20age/sex%20interaction-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div id="effects-of-agesex-interaction" class="section level2">
+<h2><span class="header-section-number">2.4</span> Effects of Age:Sex interaction</h2>
+<p><img src="analysis_files/figure-html/ANOVA_agesexInt_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p><br> <br> <br></p>
 </div>
 </div>
 <div id="direction-of-change-with-age" class="section level1">
 <h1><span class="header-section-number">3</span> Direction of Change with Age</h1>
-<p>For each gene that we have both mRNA and protein expression data, we fitted a linear model <span class="math display">\[ y_{i} \sim Age + Sex + Generation \]</span> and then tested the significance of the effects Age and recorded its p-values and slope. For the 6667 genes for which we have both mRNA and protein expression data, we can illustrate the distinct changes in expression with age and identify those that are significant.</p>
-<p>In our manuscript we analysed the significant quadrants, colored in purple below, using the Ingenuity Pathway Analysis (IPA) to identify enriched biological pathways. To see our findings please refer to our manuscript.</p>
-<p><span style="color:red">Link to Rmd page</span>    </p>
-<p><img src="analysis_files/figure-html/plotting-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><span style="color:red">Link to output file that will need to be incorporated</span></p>
-<p><br> <br> <br></p>
+<p>We can illustrate the direction of change in mRNA and protein expression with age using the slope calculated from the linear model in the previous section.</p>
+<p><img src="analysis_files/figure-html/SlopePlot-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><br> <br></p>
+<p>In our manuscript, we used <a href="http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html">clusterProfiler</a> to identify enriched biological functions and pathways of each of the 4 significant cluster of genes. For more information please refer to our manuscript <span style="color:red"> HERE. (needs link)</span></p>
 </div>
 <div id="the-ecological-fallacy" class="section level1">
 <h1><span class="header-section-number">4</span> The Ecological Fallacy</h1>
-<p>Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as “The ecological fallacy”, whereby total correlation is not the same as individual group correlation.</p>
-<p><img src="images/EcoFallacy.png" width="80%" /></p>
-<div id="an-example-of-slc9a3" class="section level2">
-<h2><span class="header-section-number">4.1</span> An example of Slc9a3</h2>
-<p>Slc9a3 was highlighted in our manuscript as a gene found to have decreasing mRNA but increasing protein with age. Slc9a3 is a gene that encodes for a Na/H exchange found on the brush boarder of the proximal tubule. Although the total changes show that Slc9a3 mRNA is decreasing with age and SLC9A3 proteins are increasing with age, we find that on a individual group level (by sex and age) they are similarly positively correlated. <br></p>
-<p><img src="analysis_files/figure-html/plot%20from%20paper-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>Although for us Slc9a3 is a biologically interesting gene, it’s difficult to see the ecological fallacy. Below are some clear examples.</p>
-</div>
-<div id="best-examples" class="section level2">
-<h2><span class="header-section-number">4.2</span> Best examples</h2>
-<p>We picked Slc5a12 and Flot1 as the best examples of this ecological fallacy.</p>
-<p>Slc5a12 is an example whereby the mRNA expression decreased and the protein expression increased with age. As you can see there is not shift at 6 and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression. Again, note that the individual group level are similarly positively correlated.</p>
-<p>Flot1 is an example where by the mRNA expression increases with age and the protein expression decreases with age. You can observe the down and rightward shift of the lines with age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age. <br></p>
-<p><img src="analysis_files/figure-html/best%20examples-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as “The ecological fallacy”, whereby the correlation of the total population is not the same as individual age group correlation.</p>
+<p><img src="images/EcoFallacy_v2.png" width="90%" /></p>
+<p>We picked <em>Slc5a12</em> and <em>Flot1</em> as the best examples to demonstrate this ecological fallacy.</p>
+<p>At the whole population level, the mRNA expression of <em>Slc5a12</em> decreased with age and the protein expression increased with age. However, when broken down by age groups, the mRNA and protein expressions are positively correlated. When were compare between the age groups we do not see a shift between 6 month and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression.</p>
+<p>In contrast to <em>Slc5a12</em>, <em>Flot1</em> is an example where by the mRNA expression increases with age and the protein expression decreases with age at the whole population level. At the level of the individual age groups, we observe a bottom-right shift with an increase in age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age. <br></p>
+<p><img src="analysis_files/figure-html/EcoFallacy_examples-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p><br> <br> <br></p>
 </div>
+<div id="relating-change-in-mrna-and-protein-to-renal-physiology" class="section level1">
+<h1><span class="header-section-number">5</span> Relating change in mRNA and protein to renal physiology</h1>
+<p>In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice. From the analysis conducted in previous sections, we identified <em>Slc34a1</em>, <em>Slc34a3</em>, and <em>Lrp2</em> in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level.</p>
+<p><br></p>
+<div id="slc34a1-and-slc34a3-expression-levels" class="section level2">
+<h2><span class="header-section-number">5.1</span> <em>Slc34a1</em> and <em>Slc34a3</em> expression levels</h2>
+<div id="global-level" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Global level</h3>
+<p><em>Slc34a1</em> and <em>Slc34a3</em> each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule for phosphate reabsorption. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males. <br> <img src="analysis_files/figure-html/Slc34%20expression%20with%20age%20-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="relating-to-renal-physiology" class="section level1">
-<h1><span class="header-section-number">5</span> Relating to renal physiology</h1>
-<p><br></p>
-<div id="slc34a1-and-phosphate" class="section level2">
-<h2><span class="header-section-number">5.1</span> Slc34a1 and Phosphate</h2>
-<p><img src="analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<p><br></p>
+<div id="individual-age-group-level" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Individual age group level</h3>
+<p><br> We also observe positive correlation between mRNA and protein levels at individual age groups. Both <em>Slc34a1</em> and <em>Slc34a3</em> show a shift towards the top-left corner with increasing age, which is refletive of the observations made at the whole population level. <br></p>
+<p><img src="analysis_files/figure-html/Slc34%20mrna%20vs%20protein%20expression-1.png" width="672" style="display: block; margin: auto;" /> <br> As expected for mediators of phosphate reabsorption, <em>Slc34a1</em> and <em>Slc34a3</em> each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males. <br></p>
 </div>
-<div id="slc34a3-and-phosphate" class="section level2">
-<h2><span class="header-section-number">5.2</span> Slc34a3 and Phosphate</h2>
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p><br></p>
+</div>
+<div id="slc34a1-and-slc34a3-compared-to-phosphate" class="section level2">
+<h2><span class="header-section-number">5.2</span> <em>Slc34a1</em> and <em>Slc34a3</em> compared to phosphate</h2>
+<p><img src="analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /> <br> <br></p>
 </div>
 <div id="lrp2-and-albumin" class="section level2">
 <h2><span class="header-section-number">5.3</span> Lrp2 and Albumin</h2>
-<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><br> <br> <br></p>
 </div>
 </div>
 <div id="session-information" class="section level1">
 <h1><span class="header-section-number">6</span> Session Information</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.0 (2018-04-23)
+<pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Sierra 10.12.6
+## Running under: macOS High Sierra 10.13.6
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -414,24 +408,24 @@ R --no-save --args ${I} &lt; ${script}.R &gt; ${script}.Rout</code></pre>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2.2  ggsci_2.9       gridExtra_2.3   forcats_0.3.0  
-##  [5] stringr_1.3.1   dplyr_0.7.5     purrr_0.2.4     readr_1.1.1    
-##  [9] tidyr_0.8.1     tibble_1.4.2    ggplot2_2.2.1   tidyverse_1.2.1
+##  [1] bindrcpp_0.2.2  ggsci_2.8       gridExtra_2.3   forcats_0.3.0  
+##  [5] stringr_1.3.0   dplyr_0.7.5     purrr_0.2.4     readr_1.1.1    
+##  [9] tidyr_0.8.0     tibble_1.4.2    ggplot2_3.0.0   tidyverse_1.2.1
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_0.2.4 reshape2_1.4.3   haven_1.1.1      lattice_0.20-35 
-##  [5] colorspace_1.3-2 htmltools_0.3.6  yaml_2.1.19      rlang_0.2.0     
-##  [9] pillar_1.2.2     foreign_0.8-70   glue_1.2.0       modelr_0.1.2    
-## [13] readxl_1.1.0     bindr_0.1.1      plyr_1.8.4       munsell_0.4.3   
-## [17] gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2      psych_1.8.4     
-## [21] evaluate_0.10.1  labeling_0.3     knitr_1.20       parallel_3.5.0  
-## [25] broom_0.4.4      Rcpp_0.12.17     scales_0.5.0     backports_1.1.2 
-## [29] jsonlite_1.5     mnormt_1.5-5     hms_0.4.2        digest_0.6.15   
-## [33] stringi_1.2.2    grid_3.5.0       rprojroot_1.3-2  cli_1.0.0       
-## [37] tools_3.5.0      magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4    
-## [41] pkgconfig_2.0.1  xml2_1.2.0       lubridate_1.7.4  assertthat_0.2.0
-## [45] rmarkdown_1.9    httr_1.3.1       rstudioapi_0.7   R6_2.2.2        
-## [49] nlme_3.1-137     compiler_3.5.0</code></pre>
+##  [5] colorspace_1.3-2 htmltools_0.3.6  yaml_2.1.19      rlang_0.2.1     
+##  [9] pillar_1.2.2     foreign_0.8-70   glue_1.3.0       withr_2.1.2     
+## [13] modelr_0.1.1     readxl_1.1.0     bindr_0.1.1      plyr_1.8.4      
+## [17] munsell_0.5.0    gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2     
+## [21] psych_1.8.3.3    evaluate_0.10.1  labeling_0.3     knitr_1.20      
+## [25] parallel_3.5.1   broom_0.4.4      Rcpp_0.12.18     scales_1.0.0    
+## [29] backports_1.1.2  jsonlite_1.5     mnormt_1.5-5     hms_0.4.2       
+## [33] digest_0.6.15    stringi_1.2.4    grid_3.5.1       rprojroot_1.3-2 
+## [37] cli_1.0.0        tools_3.5.1      magrittr_1.5     lazyeval_0.2.1  
+## [41] crayon_1.3.4     pkgconfig_2.0.1  xml2_1.2.0       lubridate_1.7.4 
+## [45] assertthat_0.2.0 rmarkdown_1.9    httr_1.3.1       rstudioapi_0.7  
+## [49] R6_2.2.2         nlme_3.1-137     compiler_3.5.1</code></pre>
 </div>
 
 
