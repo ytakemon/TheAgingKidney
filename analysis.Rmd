@@ -12,11 +12,10 @@ output:
 ---
 
 **TODO LIST:**
+
 * upload data and scripts
 * change paths to uploaded data
 
-<br>
-<br>
 <br>
 
 # Overall study design
@@ -48,7 +47,7 @@ qsub -v I="./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_slope
 ```
 
 ## Histograms of p-values
-The figures below visualizes the distribution of p-values that incdicates whether the gene have significant changes in mRNA/protein as a result of age, sex, and age:sex interaction.
+The figures below visualizes the distribution of p-values that indicates whether the gene have significant changes in mRNA/protein as a result of age, sex, and age:sex interaction.
 
 We found that sex effect on mRNA was stronger than the effects of Age, which is to be expected. We also saw that the proteins seem to be strongly affected by both sex and age.
 
@@ -125,61 +124,23 @@ grid.arrange(pval_mRNA_int, pval_protein_int, ncol=2)
 
 <br>
 <br>
-<br>
 
 # Direction of Change with Age
 We can illustrate the direction of change in mRNA and protein expression with age using the slope calculated from the linear model in the previous section.
 
 ```{r SlopePlot, echo = FALSE, message=FALSE, fig.height = 5, fig.width= 5, fig.align = "center"}
-# Set directory
-setwd("~/Dropbox/TheAgingKidneyData")
-
-# Load library and data
-load("./RData/DO188b_kidney_noprobs.RData")
-data <- read_csv("./ANOVA/kidney_anova_slope_output.csv")
-
-# Subset to columns with slopes and pvalues
-mcols <- grep("^m.", colnames(data))
-sigcols <- grep("^p.", colnames(data))
-data <- data[, c(1:8, mcols, sigcols)]
-
-# Using only age realated mRNA and Protein that are significant < 0.05
-df_age <- data[data$p.mRNA_Age.Sex <= 0.05,]
-df_age <- df_age[df_age$p.Prot_Age.Sex <= 0.05,]
-
-# Count number of genes in each quadrant
-# mRNA-Protein
-total <- nrow(df_age)
-quadI <- nrow(df_age[((df_age$m.mRNA_Age.Sex > 0) & (df_age$m.Prot_Age.Sex > 0)),])
-quadIV <- nrow(df_age[((df_age$m.mRNA_Age.Sex > 0) & (df_age$m.Prot_Age.Sex < 0)),])
-quadII <- nrow(df_age[((df_age$m.mRNA_Age.Sex < 0) & (df_age$m.Prot_Age.Sex > 0)),])
-quadIII <- nrow(df_age[((df_age$m.mRNA_Age.Sex < 0) & (df_age$m.Prot_Age.Sex < 0)),])
-
-# Plot age realted mRNA/Protein slopes
-ggplot() +
-      geom_point(data = data, aes(x = m.mRNA_Age.Sex, y = m.Prot_Age.Sex), colour =  "#64676d", alpha = 0.3) + # set colour to light grey
-      geom_point(data = df_age, aes(x = m.mRNA_Age.Sex, y = m.Prot_Age.Sex), colour = "#66125c") + # set colour of significant genes to eggplant
-      scale_x_continuous("mRNA-Age.Sex",
-                         breaks = seq(-1, 1, by = 0.1)) +
-      scale_y_continuous("Protein-Age.Sex",
-                         breaks = seq(-1, 1, by = 0.1)) +
-      geom_vline(xintercept = 0) +
-      geom_hline(yintercept = 0) +
-      labs( title = "Direction of change in gene expression with Age",
-            subtitle = paste0("Slope: RNA v. Protein, Total = ", total, ", Sig = ", nrow(df_age))) +
-      annotate("text", x = 0.25, y = 0.85, label = paste("A = ", quadI)) +
-      annotate("text", x = 0.25, y = -0.85, label = paste("C = ", quadIV)) +
-      annotate("text", x = -0.25, y = 0.85, label = paste("D = ", quadII)) +
-      annotate("text", x = -0.25, y = -0.85, label = paste("B = ", quadIII)) +
-      theme(panel.background = element_blank(),
-            panel.border = element_rect( colour = "black", fill = NA))
+# Calculate and create plot using source
+source("./Rsource/SlopePlot.R")
+# show plot
+print(SlopePlot)
 ```
 
 <br>
 <br>
 
 In our manuscript, we used [clusterProfiler](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) to identify enriched biological functions and pathways of each of the 4 significant cluster of genes. For more information please refer to our manuscript <span style="color:red"> HERE. (needs link)</span>
-
+<br>
+<br>
 
 # The Ecological Fallacy
 Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as "The ecological fallacy", whereby the correlation of the total population is not the same as individual age group correlation.
@@ -188,399 +149,33 @@ Previously we showed how mRNA and protein expression changed with age. We want t
 knitr::include_graphics("images/EcoFallacy_v2.png")
 ```
 
-```{r create shortcut function, echo = FALSE, message= FALSE}
-# load library
-library(ggsci)
-
-get.gene <- function(gene.symbol){
-
-  # pull covariates and convert to factors
-  # note Age is numeric and fAge is factor
-  Mouse.ID <- rownames(annot.samples)
-  Sex <- factor(as.character(model.matrix(~annot.samples[,"Sex"])[,2]+1), levels=c("1","2"), labels=c("F","M"))
-  Age <- annot.samples$Age
-  fAge <- factor(as.character(Age),levels=c("6","12","18"))
-
-  #pull gene identifiers from mrna and protein annotations
-  mrna.id <- annot.mrna[annot.mrna$symbol==gene.symbol,"id"]
-  protein.id <- annot.protein[annot.protein$symbol==gene.symbol,"id"]
-
-  # strat building the tiblle to hold data
-  my.data <- data_frame(Mouse.ID=Mouse.ID,
-                        Sex=Sex,
-                        Age=Age,
-                        fAge=fAge)
-  # add RNA and Protein columns to the tibble - if it exists
-  if(length(mrna.id)>0){
-    my.data <- mutate(my.data, RNA=expr.mrna[,mrna.id])
-  }
-  if(length(protein.id)>0){
-    my.data <- mutate(my.data, Protein=expr.protein[,protein.id])
-  }
-  # return value is a tibble with covariates, RNA and Protein data
-  my.data
-}
-```
-
-
 ```{r Example Eco Fallacies, echo = FALSE, message= FALSE}
-# Slc5a12
-df <- get.gene("Slc5a12") %>%
-  mutate(
-    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
-
-df_summary <- df %>%
-  group_by(Sex, fAge) %>%
-  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
-    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-Slc5a12 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df, aes(x=RNA, y=Protein)) +
-  geom_line(data=df, aes(x = RNA, y = Fitted)) +
-  labs( title = "Slc5a12 mRNA v. Protein Expression by Age",
-        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
-        y = "SLC5A12 expression (Rank normalized protein)",
-        x = "Slc5a12 expression (Rank normalized mRNA)",
-        color = "Age") +
-  theme_bw() +
-  scale_colour_aaas()
-
-# Flot1
-df <- get.gene("Flot1") %>%
-  mutate(
-    Fitted = fitted(lm(Protein ~ Sex+fAge+Sex:fAge+RNA, data=.)))
-
-df_summary <- df %>%
-  group_by(Sex, fAge) %>%
-  summarize(mRNA=mean(RNA), sdRNA=sd(RNA),
-    mProtein=mean(Protein), sdProtein=sd(Protein), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-Flot1 <- ggplot(df_summary, aes(x=mRNA, y=mProtein, color=fAge, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df, aes(x=RNA, y=Protein)) +
-  geom_line(data=df, aes(x = RNA, y = Fitted)) +
-  labs( title = "Flot1 mRNA v. Protein Expression by Age",
-        subtitle = paste0("Female: 93 (6mo=33, 12mo=31, 18mo=29) \nMale: 95(6mo=30, 12mo=31, 18mo=34)"),
-        y = "FLOT1 expression (Rank normalized protein)",
-        x = "Flot1 expression (Rank normalized mRNA)",
-        color = "Age") +
-  theme_bw() +
-  scale_colour_aaas()
+source("./Rsource/EcoFallacy.R")
 ```
-
-We picked *Slc5a12* and *Flot1* as the best examples to demonstrate this ecological fallacy.  
-
-At the whole population level, the mRNA expression of *Slc5a12* decreased with age and the protein expression increased with age. However, when broken down by age groups, the mRNA and protein expressions are positively correlated. When were compare between the age groups we do not see a shift between 6 month and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression.
-
-In contrast to *Slc5a12*, *Flot1* is an example where by the mRNA expression increases with age and the protein expression decreases with age at the whole population level. At the level of the individual age groups, we observe a bottom-right shift with an increase in age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age.
 <br>
-
+We picked *Slc5a12* and *Flot1* as the best examples to demonstrate this ecological fallacy.  
+<br>
 ```{r EcoFallacy_examples, echo = FALSE, message = FALSE, fig.height = 5, fig.width= 10, fig.align = "center"}
 # Example from paper
 grid.arrange(Slc5a12, Flot1, ncol=2)
 ```
+<br>
+At the whole population level, the mRNA expression of *Slc5a12* decreased with age and the protein expression increased with age. However, when broken down by age groups, the mRNA and protein expressions are positively correlated. When were compare between the age groups we do not see a shift between 6 month and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression.
 
-<br>
+In contrast to *Slc5a12*, *Flot1* is an example where by the mRNA expression increases with age and the protein expression decreases with age at the whole population level. At the level of the individual age groups, we observe a bottom-right shift with an increase in age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age.
 <br>
 <br>
 
-# Relating change in mRNA and protein to renal physiology
+# Relating changes in mRNA and protein to renal physiology
 
 In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice. 
 From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc34a3*, and *Lrp2* in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level. 
 
 <br>
 
-```{r phenotype setup, echo = FALSE, message = FALSE, warning = FALSE}
-setwd("~/Dropbox/TheAgingKidneyData")
-Upheno <- read.delim("./Phenotype/JAC_CS_urine_chem_v1.txt", sep = "\t")
-
-pheno <- Upheno %>%
-         mutate(
-           Mouse.ID = mouse.id,
-           duplicated = (duplicated(Upheno$mouse.id) | duplicated(Upheno$mouse.id, fromLast = TRUE)),
-           Alb = ma.u,
-           Phs = phs.u) %>%
-         filter((Mouse.ID %in% annot.samples$Mouse.ID) & duplicated == FALSE) %>%
-         select(Mouse.ID, Alb, Phs)
-
-
-annot.samples <- annot.samples[annot.samples$Mouse.ID %in% pheno$Mouse.ID,]
-expr.mrna <- expr.mrna[rownames(expr.mrna) %in% pheno$Mouse.ID,]
-expr.protein <- expr.protein[rownames(expr.protein) %in% pheno$Mouse.ID,]
-
-# Identify gene name
-Slc34a1_m <- annot.mrna[annot.mrna$symbol == "Slc34a1",]$id
-Slc34a1_p <- annot.protein[annot.protein$symbol == "Slc34a1",]$id
-Slc34a3_m <- annot.mrna[annot.mrna$symbol == "Slc34a3",]$id
-Slc34a3_p <- annot.protein[annot.protein$symbol == "Slc34a3",]$id
-Lrp2_m <- annot.mrna[annot.mrna$symbol == "Lrp2",]$id
-Lrp2_p <- annot.protein[annot.protein$symbol == "Lrp2",]$id
-
-df <- annot.samples %>%
-      mutate(
-        Slc34a1_mRNA = expr.mrna[, Slc34a1_m],
-        Slc34a1_protein = expr.protein[, Slc34a1_p],
-        Slc34a3_mRNA = expr.mrna[, Slc34a3_m],
-        Slc34a3_protein = expr.protein[, Slc34a3_p],
-        Lrp2_mRNA = expr.mrna[, Lrp2_m],
-        Lrp2_protein = expr.protein[, Lrp2_p],
-        Sex = as.factor(Sex),
-        Generation = factor(Generation, levels = c("G8","G9","G10","G11","G12")),
-        Age = factor(as.character(Age), levels = c("6","12","18")),
-        Alb = pheno$Alb,
-        Phs = pheno$Phs) %>%
-      select(Mouse.ID, Sex, Generation, Age, Slc34a1_mRNA, Slc34a1_protein, Slc34a3_mRNA, Slc34a3_protein, Lrp2_mRNA, Lrp2_protein, Alb, Phs)
-
-#Slc34a1 protein ~ RNA
-df_r1c3 <- df %>%
-  mutate(
-    Fitted = fitted(lm(Slc34a1_protein ~ Sex+Age+Slc34a1_mRNA+Sex:Age, data=.)))
-
-df_r1c3_summary <- df_r1c3 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Slc34a1_mRNA), sdRNA=sd(Slc34a1_mRNA),
-    mProtein=mean(Slc34a1_protein), sdProtein=sd(Slc34a1_protein), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r1c3 <- ggplot(df_r1c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r1c3, aes(x=Slc34a1_mRNA, y=Slc34a1_protein), alpha = 0.6) +
-  geom_line(data=df_r1c3, aes(x = Slc34a1_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Slc34a1 protein",
-       x = "Slc34a1 mRNA") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a3 protein ~ RNA
-df_r2c3 <- df %>% filter(!is.na(df$Slc34a3_protein)) %>%
-    mutate( Fitted = fitted(lm(Slc34a3_protein ~ Sex+Age+Slc34a3_mRNA+Sex:Age, data=.)))
-
-df_r2c3_summary <- df_r2c3 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Slc34a3_mRNA), sdRNA=sd(Slc34a3_mRNA),
-    mProtein=mean(Slc34a3_protein), sdProtein=sd(Slc34a3_protein), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r2c3 <- ggplot(df_r2c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r2c3, aes(x=Slc34a3_mRNA, y=Slc34a3_protein), alpha = 0.6) +
-  geom_line(data=df_r2c3, aes(x = Slc34a3_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Slc34a3 protein",
-       x = "Slc34a3 mRNA") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-  theme_bw() +
-  scale_colour_aaas()
-
-#Lrp2 protein ~ RNA
-df_r3c3 <- df %>% filter(!is.na(df$Lrp2_protein)) %>%
-    mutate( Fitted = fitted(lm(Lrp2_protein ~ Sex+Age+Lrp2_mRNA+Sex:Age, data=.)))
-
-df_r3c3_summary <- df_r3c3 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Lrp2_mRNA), sdRNA=sd(Lrp2_mRNA),
-    mProtein=mean(Lrp2_protein), sdProtein=sd(Lrp2_protein), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r3c3 <- ggplot(df_r3c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r3c3, aes(x=Lrp2_mRNA, y=Lrp2_protein), alpha = 0.6) +
-  geom_line(data=df_r3c3, aes(x = Lrp2_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Lrp2 protein",
-       x = "Lrp2 mRNA") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-  theme_bw() +
-  scale_colour_aaas()
-
-
-#Slc34a1 Phos ~ protein
-df_r1c4 <- df %>% filter(!is.na(Phs)) %>%
-  mutate(
-    Fitted = fitted(lm(Phs ~ Sex+Age+Slc34a1_protein+Sex:Age, data=.)))
-
-df_r1c4_summary <- df_r1c4 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Slc34a1_protein), sdRNA=sd(Slc34a1_protein),
-    mProtein=mean(Phs), sdProtein=sd(Phs), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r1c4 <- ggplot(df_r1c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r1c4, aes(x=Slc34a1_protein, y=Phs), alpha = 0.6) +
-  geom_line(data=df_r1c4, aes(x = Slc34a1_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Phosphate",
-       x = "Slc34a1 protein") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-  coord_cartesian(ylim = c(0,800))+
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a1 Phos ~ protein
-df_r2c4 <- df %>% filter(!is.na(Phs) & !is.na(Slc34a3_protein)) %>%
-  mutate(
-    Fitted = fitted(lm(Phs ~ Sex+Age+Slc34a3_protein+Sex:Age, data=.)))
-
-df_r2c4_summary <- df_r2c4 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Slc34a3_protein), sdRNA=sd(Slc34a3_protein),
-    mProtein=mean(Phs), sdProtein=sd(Phs), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r2c4 <- ggplot(df_r2c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r2c4, aes(x=Slc34a3_protein, y=Phs), alpha = 0.6) +
-  geom_line(data=df_r2c4, aes(x = Slc34a3_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Phosphate",
-       x = "Slc34a3 protein") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-  coord_cartesian(ylim = c(0,800))+
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a1 Phos ~ protein
-df_r3c4 <- df %>% filter(!is.na(Alb) & !is.na(Lrp2_protein)) %>%
-  mutate(
-    Fitted = fitted(lm(Alb ~ Sex+Age+Lrp2_protein+Sex:Age, data=.)))
-
-df_r3c4_summary <- df_r3c4 %>%
-  group_by(Sex, Age) %>%
-  summarize(mRNA=mean(Lrp2_protein), sdRNA=sd(Lrp2_protein),
-    mProtein=mean(Alb), sdProtein=sd(Alb), N=n() ) %>%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r3c4 <- ggplot(df_r3c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r3c4, aes(x=Lrp2_protein, y=Alb), alpha = 0.6) +
-  geom_line(data=df_r3c4, aes(x = Lrp2_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = "Albumin",
-       x = "Lrp2 protein") +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = "black")) +
-#  coord_cartesian(ylim = c(0,20))+
-  theme_bw() +
-  scale_colour_aaas()
-
-## rest of plot
-r1c1 <- ggplot(df, aes(Age, y = Slc34a1_mRNA, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Slc34a1 mRNA",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
-
-r1c2 <- ggplot(df, aes(Age, y = Slc34a1_protein, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Slc34a1 protein",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
-
-r2c1 <- ggplot(df, aes(Age, y = Slc34a3_mRNA, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Slc34a3 mRNA",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
-
-r2c2 <- ggplot(df, aes(Age, y = Slc34a3_protein, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Slc34a3 protein",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
-
-r3c1 <- ggplot(df, aes(Age, y = Lrp2_mRNA, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Lrp2 mRNA",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
-
-r3c2 <- ggplot(df, aes(Age, y = Lrp2_protein, colour = Sex)) +
-          geom_smooth(method = "lm", se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = "Lrp2 protein",
-               x = "Age") +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = "black")) +
-          scale_colour_aaas()
+```{r phenotyp, echo = FALSE, message = FALSE, warning = FALSE}
+# source file that contains code for plots below
+source("./Rsource/Phenotype.R")
 ```
 
 ## *Slc34a1* and  *Slc34a3* expression levels
@@ -588,39 +183,59 @@ r3c2 <- ggplot(df, aes(Age, y = Lrp2_protein, colour = Sex)) +
 *Slc34a1* and  *Slc34a3* each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule for phosphate reabsorption. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males.
 <br>
 ```{r Slc34 expression with age , echo = FALSE, message = FALSE, warning = FALSE, fig.height = 5, fig.width= 7, fig.align = "center"}
-grid.arrange(r1c1,r1c2,r2c1,r2c2, ncol = 2)
+grid.arrange(Slca1_m,Slca1_p,Slca3_m,Slca3_p, ncol = 2)
 ```
 
 ### Individual age group level 
 <br>
-We also observe positive correlation between mRNA and protein levels at individual age groups. Both *Slc34a1* and  *Slc34a3* show a shift towards the top-left corner with increasing age, which is refletive of the observations made at the whole population level.
+We also observe positive correlation between mRNA and protein levels at individual age groups. Both *Slc34a1* and  *Slc34a3* show a shift towards the top-left corner with increasing age, which is reflective of the observations made at the whole population level.
 <br>
-
 ```{r Slc34 mrna vs protein expression, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3, fig.width= 7, fig.align = "center"}
-grid.arrange(plot_r1c3,plot_r2c3, ncol = 2)
-```
-<br>
-As expected for mediators of phosphate reabsorption, *Slc34a1* and  *Slc34a3* each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males.
-<br>
-
-## *Slc34a1* and  *Slc34a3* compared to phosphate
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3, fig.width= 7, fig.align = "center"}
-grid.arrange(plot_r1c4,plot_r2c4, ncol = 2)
-```
-<br>
-<br>
-
-## Lrp2 and Albumin
-```{r, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 5, fig.width= 7, fig.align = "center"}
-grid.arrange(r3c1,r3c2,plot_r3c3,plot_r3c4, ncol = 2)
+grid.arrange(Slca1_mp,Slca3_mp, ncol = 2)
 ```
 
+### *Slc34a1* and  *Slc34a3* compared to urinary phosphate levels
+<br>
+As expected for mediators of phosphate reabsorption, we confirmed an increase in *Slc34a1* and  *Slc34a3* both lead to decreasing levels of urinary phosphate levels.
+<br>
+```{r Slc34 with phoshate, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3, fig.width= 7, fig.align = "center"}
+grid.arrange(Slca1_pPhos,Slca3_pPhos, ncol = 2)
+```
+
+## Lrp2 expression levels
+### Global levels
+<br>
+*Lrp2* encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule. 
+Similar to *Slc34a1* and  *Slc34a3* the global levels of *Lrp2* mRNA and protein are respectively decreasing and increasing with age. 
+<br>
+```{r Lrp2 global, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 3, fig.width= 7, fig.align = "center"}
+grid.arrange(Lrp2_m,Lrp2_p, ncol = 2)
+```
+
+### Individual age group level 
+<br>
+We also observe the global trend reflected individually with age, driven by the top-left shift with increasing age. Additionally we also observe overall higher expression level of both *Lrp2* mRNA and protein in females (circle).  
+<br>
+```{r Lrp2 with age, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 3, fig.width= 4, fig.align = "center"}
+print(Lrp2_mp)
+```
+
+### *Lrp2* compared to urinary albumin levels
+<br>
+We were able to measure albumin levels form 120 DO mice. 90 of these mice had urinary albumin levels < 1 mg/dL and 67 animals had 0 mg/dL or below detection levels of urinary albumin. This lack of detectable albumin heavily skewed our data as it can be seen in the plot below. As these DO animals were not specifically genetically engineered to develop renal failure, we only expect a few animals with albuminuria. In our cohort of 188 DO mice, we have 5 animals with microalbuminuria (> 30 mg/dL of urinary albumin).
+<br>
+```{r Lrp2 and albumin, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 3, fig.width= 4, fig.align = "center"}
+print(Lrp2_pAlb)
+```
+<br>
+
+# Identifying drivers of age associated changes in mRNA and protein
+
+```{r additive eQTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 3, fig.width= 4, fig.align = "center"}
+
+```
 
 
-
-<br>
-<br>
-<br>
 
 # Session Information
 
