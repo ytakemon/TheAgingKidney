@@ -314,16 +314,16 @@ div.tocify {
 </ul>
 <p><br></p>
 <div id="overall-study-design" class="section level1">
-<h1><span class="header-section-number">1</span> Overall study design</h1>
-<p>We collected kidneys from 188 Diversity Outbred, 93 females and 95 males, mice at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels).</p>
-<p><img src="images/StudyDesign.png" width="80%" /></p>
+<h1><span class="header-section-number">1</span> . Overall study design</h1>
+<p>We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels).</p>
+<p><img src="images/StudyDesign.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="mrna-and-protein-that-change-with-age" class="section level1">
-<h1><span class="header-section-number">2</span> mRNA and protein that change with age</h1>
+<h1><span class="header-section-number">2</span> . mRNA and protein that change with age</h1>
 <p>We fitted a linear model for all 6,667 genes with both mRNA and protein expression information.</p>
 <p><span class="math display">\[ y_{i} \sim Age + Sex + Generation \]</span> From linear model, we recorded slope and p-value generated from each mRNA and protein in the downstream processes. Additionally for a subset of genes with both mRNA and protein information, we also extracted the slope coefficient from.</p>
 <div id="running-linear-regression-script" class="section level2">
-<h2><span class="header-section-number">2.1</span> Running linear regression script</h2>
+<h2><span class="header-section-number">2.1</span> . Running linear regression script</h2>
 <p>The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order.</p>
 <p>The files needed are provided <span style="color:red"> HERE:</span></p>
 <ul>
@@ -336,77 +336,169 @@ div.tocify {
 qsub -v I=&quot;./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_slope_output.csv&quot;,script=anova_tests_slope_pairs Rsubmit_args.sh</code></pre>
 </div>
 <div id="histograms-of-p-values" class="section level2">
-<h2><span class="header-section-number">2.2</span> Histograms of p-values</h2>
-<p>The figures below visualizes the distribution of p-values that incdicates whether the gene have significant changes in mRNA/protein as a result of age, sex, and age:sex interaction.</p>
+<h2><span class="header-section-number">2.2</span> . Histograms of p-values</h2>
+<p>The figures below visualizes the distribution of p-values that indicates whether the gene have significant changes in mRNA/protein as a result of age, sex, and age:sex interaction.</p>
 <p>We found that sex effect on mRNA was stronger than the effects of Age, which is to be expected. We also saw that the proteins seem to be strongly affected by both sex and age.</p>
 <div id="effects-on-mrna" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Effects on mRNA</h3>
+<h3><span class="header-section-number">2.2.1</span> . Effects on mRNA</h3>
 <p><img src="analysis_files/figure-html/ANOVA_sex_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="effects-on-protein" class="section level2">
-<h2><span class="header-section-number">2.3</span> Effects on protein</h2>
+<h2><span class="header-section-number">2.3</span> . Effects on protein</h2>
 <p><img src="analysis_files/figure-html/ANOVA_age_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="effects-of-agesex-interaction" class="section level2">
-<h2><span class="header-section-number">2.4</span> Effects of Age:Sex interaction</h2>
+<h2><span class="header-section-number">2.4</span> . Effects of Age:Sex interaction</h2>
 <p><img src="analysis_files/figure-html/ANOVA_agesexInt_pval-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p><br> <br></p>
 </div>
 </div>
 <div id="direction-of-change-with-age" class="section level1">
-<h1><span class="header-section-number">3</span> Direction of Change with Age</h1>
+<h1><span class="header-section-number">3</span> . Direction of Change with Age</h1>
 <p>We can illustrate the direction of change in mRNA and protein expression with age using the slope calculated from the linear model in the previous section.</p>
 <p><img src="analysis_files/figure-html/SlopePlot-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p><br> <br></p>
 <p>In our manuscript, we used <a href="http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html">clusterProfiler</a> to identify enriched biological functions and pathways of each of the 4 significant cluster of genes. For more information please refer to our manuscript <span style="color:red"> HERE. (needs link)</span> <br> <br></p>
 </div>
 <div id="the-ecological-fallacy" class="section level1">
-<h1><span class="header-section-number">4</span> The Ecological Fallacy</h1>
+<h1><span class="header-section-number">4</span> . The Ecological Fallacy</h1>
 <p>Previously we showed how mRNA and protein expression changed with age. We want to highlight a few genes to explain what is known as “The ecological fallacy”, whereby the correlation of the total population is not the same as individual age group correlation.</p>
 <p><img src="images/EcoFallacy_v2.png" width="90%" /></p>
 <p><br> We picked <em>Slc5a12</em> and <em>Flot1</em> as the best examples to demonstrate this ecological fallacy.<br />
 <br> <img src="analysis_files/figure-html/EcoFallacy_examples-1.png" width="960" style="display: block; margin: auto;" /> <br> At the whole population level, the mRNA expression of <em>Slc5a12</em> decreased with age and the protein expression increased with age. However, when broken down by age groups, the mRNA and protein expressions are positively correlated. When were compare between the age groups we do not see a shift between 6 month and 12 months, but at 18 months of age the average of the group shifts to the top right. The upward shift indicates that the protein expression increased but the leftward shift indicates the decrease of mRNA expression.</p>
 <p>In contrast to <em>Slc5a12</em>, <em>Flot1</em> is an example where by the mRNA expression increases with age and the protein expression decreases with age at the whole population level. At the level of the individual age groups, we observe a bottom-right shift with an increase in age. The downward shift indicates a decrease in protein expression, and a rightward shift indicates a increase in mRNA expression with age. <br> <br></p>
 </div>
-<div id="relating-change-in-mrna-and-protein-to-renal-physiology" class="section level1">
-<h1><span class="header-section-number">5</span> Relating change in mRNA and protein to renal physiology</h1>
+<div id="relating-changes-in-mrna-and-protein-to-renal-physiology" class="section level1">
+<h1><span class="header-section-number">5</span> . Relating changes in mRNA and protein to renal physiology</h1>
 <p>In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice. From the analysis conducted in previous sections, we identified <em>Slc34a1</em>, <em>Slc34a3</em>, and <em>Lrp2</em> in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level.</p>
 <p><br></p>
 <div id="slc34a1-and-slc34a3-expression-levels" class="section level2">
-<h2><span class="header-section-number">5.1</span> <em>Slc34a1</em> and <em>Slc34a3</em> expression levels</h2>
+<h2><span class="header-section-number">5.1</span> . <em>Slc34a1</em> and <em>Slc34a3</em> expression levels</h2>
 <div id="global-level" class="section level3">
-<h3><span class="header-section-number">5.1.1</span> Global level</h3>
+<h3><span class="header-section-number">5.1.1</span> . Global level</h3>
 <p><em>Slc34a1</em> and <em>Slc34a3</em> each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule for phosphate reabsorption. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males. <br> <img src="analysis_files/figure-html/Slc34%20expression%20with%20age%20-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="individual-age-group-level" class="section level3">
-<h3><span class="header-section-number">5.1.2</span> Individual age group level</h3>
-<p><br> We also observe positive correlation between mRNA and protein levels at individual age groups. Both <em>Slc34a1</em> and <em>Slc34a3</em> show a shift towards the top-left corner with increasing age, which is refletive of the observations made at the whole population level. <br> <img src="analysis_files/figure-html/Slc34%20mrna%20vs%20protein%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
+<h3><span class="header-section-number">5.1.2</span> . Individual age group level</h3>
+<p><br> We also observe positive correlation between mRNA and protein levels at individual age groups. Both <em>Slc34a1</em> and <em>Slc34a3</em> show a shift towards the top-left corner with increasing age, which is reflective of the observations made at the whole population level. <br> <img src="analysis_files/figure-html/Slc34%20mrna%20vs%20protein%20expression-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="slc34a1-and-slc34a3-compared-to-urinary-phosphate-levels" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> <em>Slc34a1</em> and <em>Slc34a3</em> compared to urinary phosphate levels</h3>
+<h3><span class="header-section-number">5.1.3</span> . <em>Slc34a1</em> and <em>Slc34a3</em> compared to urinary phosphate levels</h3>
 <p><br> As expected for mediators of phosphate reabsorption, we confirmed an increase in <em>Slc34a1</em> and <em>Slc34a3</em> both lead to decreasing levels of urinary phosphate levels. <br> <img src="analysis_files/figure-html/Slc34%20with%20phoshate-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="lrp2-expression-levels" class="section level2">
-<h2><span class="header-section-number">5.2</span> Lrp2 expression levels</h2>
+<h2><span class="header-section-number">5.2</span> . Lrp2 expression levels</h2>
 <div id="global-levels" class="section level3">
-<h3><span class="header-section-number">5.2.1</span> Global levels</h3>
-<p><br> <em>Lrp2</em> encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule. Similar to <em>Slc34a1</em> and <em>Slc34a3</em> the global levels of <em>Lrp2</em> mRNA and protein are respectively decreasing and increaseing with age. <br> <img src="analysis_files/figure-html/Lrp2%20global-1.png" width="672" style="display: block; margin: auto;" /></p>
+<h3><span class="header-section-number">5.2.1</span> . Global levels</h3>
+<p><br> <em>Lrp2</em> encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule. Similar to <em>Slc34a1</em> and <em>Slc34a3</em> the global levels of <em>Lrp2</em> mRNA and protein are respectively decreasing and increasing with age. <br> <img src="analysis_files/figure-html/Lrp2%20global-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="individual-age-group-level-1" class="section level3">
-<h3><span class="header-section-number">5.2.2</span> Individual age group level</h3>
-<p><br> We also observe the global trend refleted individually with age, driven by the top-left shift with increasing age. Additionally we also observe overall higher expression level of both <em>Lrp2</em> mRNA and protein in females (circle).<br />
+<h3><span class="header-section-number">5.2.2</span> . Individual age group level</h3>
+<p><br> We also observe the global trend reflected individually with age, driven by the top-left shift with increasing age. Additionally we also observe overall higher expression level of both <em>Lrp2</em> mRNA and protein in females (circle).<br />
 <br> <img src="analysis_files/figure-html/Lrp2%20with%20age-1.png" width="384" style="display: block; margin: auto;" /></p>
 </div>
 <div id="lrp2-compared-to-urinary-albumin-levels" class="section level3">
-<h3><span class="header-section-number">5.2.3</span> <em>Lrp2</em> compared to urinary albumin levels</h3>
+<h3><span class="header-section-number">5.2.3</span> . <em>Lrp2</em> compared to urinary albumin levels</h3>
 <p><br> We were able to measure albumin levels form 120 DO mice. 90 of these mice had urinary albumin levels &lt; 1 mg/dL and 67 animals had 0 mg/dL or below detection levels of urinary albumin. This lack of detectable albumin heavily skewed our data as it can be seen in the plot below. As these DO animals were not specifically genetically engineered to develop renal failure, we only expect a few animals with albuminuria. In our cohort of 188 DO mice, we have 5 animals with microalbuminuria (&gt; 30 mg/dL of urinary albumin). <br> <img src="analysis_files/figure-html/Lrp2%20and%20albumin-1.png" width="384" style="display: block; margin: auto;" /> <br></p>
 </div>
 </div>
 </div>
+<div id="eqtl-and-pqtl-to-identifying-age-associated-changes-in-expression." class="section level1">
+<h1><span class="header-section-number">6</span> . eQTL and pQTL to identifying age associated changes in expression.</h1>
+<p><br> Using mRNA expression (eQTL) and protein expression (pQTL) as phenotypes in a quantitative trait loci (QTL) mapping approach, we were able to identify regions that regulate age/sex-associated changes in gene expression. <br> For more information on QTL analyses, <a href="https://kbroman.org/">Karl Broman</a>’s <a href="https://kbroman.org/qtl2/">R/qtl2</a> <a href="https://kbroman.org/qtl2/assets/vignettes/user_guide.html">user guide</a> is great resource for understanding and getting started with QTL scans. <br></p>
+<div id="base-rqtl2-codes" class="section level2">
+<h2><span class="header-section-number">6.1</span> . Base R/qtl2 codes</h2>
+<p><br> We calcualted 3 different models of QTL:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Additive QTL</strong> : Identifies loci that regulate gene expression.</li>
+<li><strong>Sex-interactive QTL</strong> : Identifies loci that regualte sex-associated changes in gene expresson.</li>
+<li><strong>Age-interactive QTL</strong> : Identifies loci that regulate age-associated chagnes in gene expression.</li>
+</ol>
+<p>Simplistically the <strong>additive QTL</strong> calcualtes an additive model that takes into account age, sex, generation of the animals as additive covariates. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generatio_{i}n + QTL_{gi}\]</span> <strong>Sex-interactive QTL</strong> calcualtes two models, additive model and sex-interactive model, whereby the interactive model incorporates and interactive term for Sex. The sed interactive LOD scores are calculated by subtracting the additive model from the sex-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Sex_{i}\]</span></p>
+<p><br> <strong>Age-interactive QTL</strong> calcualtes two models, additive model and age-interactive model, whereby the interactive model incorporates and interactive term for Age. The age-interactive LOD scores are calculated by subtracting the additive model from the age-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Age_{i}\]</span> <br></p>
+<p>In R, the the basic R/qtl2 code used for both additive and interactive QTL scan are below.</p>
+<pre class="r"><code># Load QTL2 library
+library(qtl2)
+library(qtl2convert)
+
+# Load probs data
+load(&quot;./RNAseq_data/DO188b_kidney.RData&quot;)
+
+# Reformat from DOQTL format to meet qtl2 format specification
+probs &lt;- probs_doqtl_to_qtl2(genoprobs, snps, pos_column = &quot;bp&quot;)
+snps$chr &lt;- as.character(snps$chr) 
+snps$chr[snps$chr==&quot;X&quot;] &lt;- &quot;20&quot; #change to numeric for creating map later
+map &lt;- map_df_to_list(map = snps, pos_column = &quot;bp&quot;)
+
+# Create matrix for each model
+## Additive
+addcovar &lt;- model.matrix(~ Sex + Age + Generation, data=annot.samples)
+## Sex-interactive
+sex_intcovar &lt;- model.matrix(~ Sex, data = annot.samples)
+## Age-interactive
+age_intcovar &lt;- model.matrix(~ Age, data = annot.samples)
+
+# scan additive model:
+  LODadd &lt;- scan1(genoprobs=probs,
+               kinship=Glist,
+               pheno=expr.protein[,p],
+               addcovar=addcovar[,-1],
+               cores=3,
+               reml=TRUE)
+
+# scan full model for age-interaction:
+  LODint &lt;- scan1(genoprobs=probs,
+               kinship=Glist,
+               pheno=expr.protein[,p],
+               addcovar=addcovar[,-1],
+               intcovar=age_intcovar[,-1], # replace with sex_intcovar for sex-interaction
+               cores=3,
+               reml=TRUE)
+  
+# get marker with maximum LOD score difference between full and additive scans:
+  maxMarker &lt;- function(full, add){
+    diff &lt;- as.data.frame(full)
+    colnames(diff) &lt;- &quot;FullLOD&quot;
+    diff$AddLOD &lt;- add[,1]
+    diff$IntAgeLODDiff &lt;- diff$FullLOD - diff$AddLOD
+    max &lt;- diff[which(diff$IntAgeLODDiff == max(diff$IntAgeLODDiff, na.rm = TRUE)[1])[1],]
+    max$IntAgeChr &lt;- str_split_fixed(rownames(max),&quot;_&quot;,2)[,1]
+    max$IntAgePos &lt;- snps[snps$marker == rownames(max),]$bp
+    return(max)
+  }
+  Max &lt;- maxMarker(full = LODint, add = LODadd)
+}
+
+# output
+output &lt;- output %&gt;% mutate(
+  FullLOD = Max$FullLOD,
+  AddLOD = Max$AddLOD,
+  IntAgeChr = Max$IntAgeChr,
+  IntAgePos = Max$IntAgePos,
+  IntAgeLODDiff = Max$IntAgeLODDiff
+)</code></pre>
+</div>
+<div id="additive-eqtl-and-pqtl" class="section level2">
+<h2><span class="header-section-number">6.2</span> . Additive eQTL and pQTL</h2>
+<p><br> For every mRNA and pQTL we have expression from, we calculated the additive eQTL and pQTL models. We plotted the genomic position of the highest LOD score (y-axis) in relation to the genomic position of the gene (y-axis) for genes with LOD scores &gt; 7.5. <br></p>
+<p>We see strong clusters of eQTL and pQTL on the diagonal axis, indicating that a majority of gene expression are regulated locally (cis-QTL).<br></p>
+<p><img src="analysis_files/figure-html/additive%20QTL-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sex-interactive-eqtl-and-pqtl" class="section level2">
+<h2><span class="header-section-number">6.3</span> . Sex-interactive eQTL and pQTL</h2>
+<p><br> We plotted the sex-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Compared to the additive model, sex-associated changes in mRNA are less locally regulated, and we begin to see more distant eQTL peaks. Similarily sex-interactive pQTL show very little local regulation.<br> <br></p>
+<p><img src="analysis_files/figure-html/sex-interactive%20QTL-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="age-interactive-eqtl-and-pqtl" class="section level2">
+<h2><span class="header-section-number">6.4</span> . Age-interactive eQTL and pQTL</h2>
+<p><br> We plotted the age-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Age-associated changes in gene and protein expression are mainly regulated by distant genes, and we begin to see dark vertical band. This vertical custer of eQTL on distal chromosome 12, indicate that a gene/genes on chromosome 12 pleiotropically regulates the age-associated changes in mRNA expression of many genes. Similarily, in the pQTL global map, a distant band on distal chromosome 15 seem to have similar effects on age-associated changes in protein expression. <br> <br></p>
+<p><img src="analysis_files/figure-html/age-interactive%20QTL-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
 <div id="session-information" class="section level1">
-<h1><span class="header-section-number">6</span> Session Information</h1>
+<h1><span class="header-section-number">7</span> . Session Information</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
@@ -420,7 +512,8 @@ qsub -v I=&quot;./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
 ## 
 ## other attached packages:
 ##  [1] bindrcpp_0.2.2  ggsci_2.9       gridExtra_2.3   forcats_0.3.0  
@@ -434,14 +527,15 @@ qsub -v I=&quot;./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_
 ## [13] gtable_0.2.0     lattice_0.20-35  pkgconfig_2.0.2  rlang_0.2.2     
 ## [17] cli_1.0.1        rstudioapi_0.8   yaml_2.2.0       haven_1.1.2     
 ## [21] withr_2.1.2      xml2_1.2.0       httr_1.3.1       knitr_1.20      
-## [25] hms_0.4.2        rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.4
-## [29] glue_1.3.0       R6_2.3.0         readxl_1.1.0     rmarkdown_1.10  
-## [33] modelr_0.1.2     magrittr_1.5     backports_1.1.2  scales_1.0.0    
-## [37] htmltools_0.3.6  rvest_0.3.2      assertthat_0.2.0 colorspace_1.3-2
-## [41] labeling_0.3     stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0   
-## [45] broom_0.5.0      crayon_1.3.4</code></pre>
+## [25] hms_0.4.2        rprojroot_1.3-2  tidyselect_0.2.4 glue_1.3.0      
+## [29] R6_2.3.0         readxl_1.1.0     rmarkdown_1.10   modelr_0.1.2    
+## [33] magrittr_1.5     backports_1.1.2  scales_1.0.0     htmltools_0.3.6 
+## [37] rvest_0.3.2      assertthat_0.2.0 colorspace_1.3-2 labeling_0.3    
+## [41] stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0    broom_0.5.0     
+## [45] crayon_1.3.4</code></pre>
 </div>
 
+<p>Copyright &copy; 2018 Yuka Takemon. MIT license.</p>
 
 
 </div>
