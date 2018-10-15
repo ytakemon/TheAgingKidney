@@ -238,19 +238,19 @@ For more information on QTL analyses, [Karl Broman](https://kbroman.org/)'s [R/q
 
 ##\. Base R/qtl2 codes
 <br> 
-We calcualted 3 different models of QTL: 
+We calculated 3 different models of QTL: 
 
 1. **Additive QTL** : Identifies loci that regulate gene expression.
-2. **Sex-interactive QTL** : Identifies loci that regualte sex-associated changes in gene expresson.
-3. **Age-interactive QTL** : Identifies loci that regulate age-associated chagnes in gene expression.
+2. **Sex-interactive QTL** : Identifies loci that regulate sex-associated changes in gene expression.
+3. **Age-interactive QTL** : Identifies loci that regulate age-associated changes in gene expression.
 
-Simplistically the **additive QTL** calcualtes an additive model that takes into account age, sex, generation of the animals as additive covariates. <br>
+Simplistically the **additive QTL** calculates an additive model that takes into account age, sex, generation of the animals as additive covariates. <br>
 $$ Y_{i} \sim Age_{i} + Sex_{i} + Generatio_{i}n + QTL_{gi}$$
-**Sex-interactive QTL** calcualtes two models, additive model and sex-interactive model, whereby the interactive model incorporates and interactive term for Sex. The sed interactive LOD scores are calculated by subtracting the additive model from the sex-interactive model. <br>
+**Sex-interactive QTL** calculates two models, additive model and sex-interactive model, whereby the interactive model incorporates and interactive term for Sex. The sex interactive LOD scores are calculated by subtracting the additive model from the sex-interactive model. <br>
 $$ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Sex_{i}$$
 
 <br>
-**Age-interactive QTL** calcualtes two models, additive model and age-interactive model, whereby the interactive model incorporates and interactive term for Age. The age-interactive LOD scores are calculated by subtracting the additive model from the age-interactive model. <br>
+**Age-interactive QTL** calculates two models, additive model and age-interactive model, whereby the interactive model incorporates and interactive term for Age. The age-interactive LOD scores are calculated by subtracting the additive model from the age-interactive model. <br>
 $$ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Age_{i}$$
 <br>
 
@@ -337,7 +337,7 @@ print(pdensity, vp = viewport(layout.pos.row = 9:10, layout.pos.col = 6:10))
 
 ##\. Sex-interactive eQTL and pQTL
 <br>
-We plotted the sex-interactive eQTL and pQTL for genes with a LOD score > 7.5. Compared to the additive model, sex-associated changes in mRNA are less locally regulated, and we begin to see more distant eQTL peaks. Similarily sex-interactive pQTL show very little local regulation.<br>
+We plotted the sex-interactive eQTL and pQTL for genes with a LOD score > 7.5. Compared to the additive model, sex-associated changes in mRNA are less locally regulated, and we begin to see more distant eQTL peaks. Similarly sex-interactive pQTL show very little local regulation.<br>
 <br>
 
 ```{r sex-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
@@ -353,7 +353,7 @@ print(pdensity, vp = viewport(layout.pos.row = 9:10, layout.pos.col = 6:10))
 
 ##\. Age-interactive eQTL and pQTL
 <br>
-We plotted the age-interactive eQTL and pQTL for genes with a LOD score > 7.5. Age-associated changes in gene and protein expression are mainly regulated by distant genes, and we begin to see dark vertical band. This vertical custer of eQTL on distal chromosome 12, indicate that a gene/genes on chromosome 12 pleiotropically regulates the age-associated changes in mRNA expression of many genes. Similarily, in the pQTL global map, a distant band on distal chromosome 15 seem to have similar effects on age-associated changes in protein expression. <br>
+We plotted the age-interactive eQTL and pQTL for genes with a LOD score > 7.5. Age-associated changes in gene and protein expression are mainly regulated by distant genes, and we begin to see dark vertical band. This vertical cluster of eQTL on distal chromosome 12, indicate that a gene/genes on chromosome 12 pleiotropically regulates the age-associated changes in mRNA expression of many genes. Similarly, in the pQTL global map, a distant band on distal chromosome 15 seem to have similar effects on age-associated changes in protein expression. <br>
 <br>
 
 ```{r age-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
