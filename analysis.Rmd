@@ -1,7 +1,5 @@
 ---
-title: "Analyses"
-author: "Yuka Takemon"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+title: "Reproducible results"
 output:
     html_document:
       toc: true
@@ -10,12 +8,14 @@ output:
         collapsed: false
         smooth_scroll: false
 ---
+<span style="color:red">
 
-**TODO LIST:**
+**TO DO LIST:**
 
 * upload data and scripts
 * change paths to uploaded data
 
+</span>
 <br>
 
 #\. Overall study design
@@ -370,5 +370,7 @@ print(pdensity, vp = viewport(layout.pos.row = 9:10, layout.pos.col = 6:10))
 #\. Session Information
 
 ```{r session-info}
+# Last updated:
+format(Sys.time(), '%d %B, %Y')
 sessionInfo()
 ```

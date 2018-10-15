@@ -1,6 +1,9 @@
 ---
 title: "The Aging Kidney Data"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
 Data will be uploaded when manuscript has been submitted.
+
+
+Last updated:
+`r format(Sys.time(), '%d %B, %Y')`

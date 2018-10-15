@@ -2,6 +2,7 @@ output_dir: docs
 name: TheAgingKidney
 output:
   html_document:
+    theme: flatly
     lib_dir: site_libs
     self_contained: no
     include:

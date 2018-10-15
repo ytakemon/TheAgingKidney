@@ -9,14 +9,13 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Yuka Takemon" />
 
 
-<title>Analyses</title>
+<title>Reproducible results</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +105,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 </style>
 
@@ -300,19 +299,18 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Analyses</h1>
-<h4 class="author"><em>Yuka Takemon</em></h4>
-<h4 class="date"><em>09 October, 2018</em></h4>
+<h1 class="title toc-ignore">Reproducible results</h1>
 
 </div>
 
 
-<p><strong>TODO LIST:</strong></p>
+<p><span style="color:red"></p>
+<p><strong>TO DO LIST:</strong></p>
 <ul>
 <li>upload data and scripts</li>
 <li>change paths to uploaded data</li>
 </ul>
-<p><br></p>
+<p></span> <br></p>
 <div id="overall-study-design" class="section level1">
 <h1><span class="header-section-number">1</span> . Overall study design</h1>
 <p>We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels).</p>
@@ -410,14 +408,14 @@ qsub -v I=&quot;./Rdata/DO188b_kidney_noprobs.RData ./Anova_output/kidney_anova_
 <p><br> Using mRNA expression (eQTL) and protein expression (pQTL) as phenotypes in a quantitative trait loci (QTL) mapping approach, we were able to identify regions that regulate age/sex-associated changes in gene expression. <br> For more information on QTL analyses, <a href="https://kbroman.org/">Karl Broman</a>’s <a href="https://kbroman.org/qtl2/">R/qtl2</a> <a href="https://kbroman.org/qtl2/assets/vignettes/user_guide.html">user guide</a> is great resource for understanding and getting started with QTL scans. <br></p>
 <div id="base-rqtl2-codes" class="section level2">
 <h2><span class="header-section-number">6.1</span> . Base R/qtl2 codes</h2>
-<p><br> We calcualted 3 different models of QTL:</p>
+<p><br> We calculated 3 different models of QTL:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Additive QTL</strong> : Identifies loci that regulate gene expression.</li>
-<li><strong>Sex-interactive QTL</strong> : Identifies loci that regualte sex-associated changes in gene expresson.</li>
-<li><strong>Age-interactive QTL</strong> : Identifies loci that regulate age-associated chagnes in gene expression.</li>
+<li><strong>Sex-interactive QTL</strong> : Identifies loci that regulate sex-associated changes in gene expression.</li>
+<li><strong>Age-interactive QTL</strong> : Identifies loci that regulate age-associated changes in gene expression.</li>
 </ol>
-<p>Simplistically the <strong>additive QTL</strong> calcualtes an additive model that takes into account age, sex, generation of the animals as additive covariates. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generatio_{i}n + QTL_{gi}\]</span> <strong>Sex-interactive QTL</strong> calcualtes two models, additive model and sex-interactive model, whereby the interactive model incorporates and interactive term for Sex. The sed interactive LOD scores are calculated by subtracting the additive model from the sex-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Sex_{i}\]</span></p>
-<p><br> <strong>Age-interactive QTL</strong> calcualtes two models, additive model and age-interactive model, whereby the interactive model incorporates and interactive term for Age. The age-interactive LOD scores are calculated by subtracting the additive model from the age-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Age_{i}\]</span> <br></p>
+<p>Simplistically the <strong>additive QTL</strong> calculates an additive model that takes into account age, sex, generation of the animals as additive covariates. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generatio_{i}n + QTL_{gi}\]</span> <strong>Sex-interactive QTL</strong> calculates two models, additive model and sex-interactive model, whereby the interactive model incorporates and interactive term for Sex. The sex interactive LOD scores are calculated by subtracting the additive model from the sex-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Sex_{i}\]</span></p>
+<p><br> <strong>Age-interactive QTL</strong> calculates two models, additive model and age-interactive model, whereby the interactive model incorporates and interactive term for Age. The age-interactive LOD scores are calculated by subtracting the additive model from the age-interactive model. <br> <span class="math display">\[ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Age_{i}\]</span> <br></p>
 <p>In R, the the basic R/qtl2 code used for both additive and interactive QTL scan are below.</p>
 <pre class="r"><code># Load QTL2 library
 library(qtl2)
@@ -488,21 +486,24 @@ output &lt;- output %&gt;% mutate(
 </div>
 <div id="sex-interactive-eqtl-and-pqtl" class="section level2">
 <h2><span class="header-section-number">6.3</span> . Sex-interactive eQTL and pQTL</h2>
-<p><br> We plotted the sex-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Compared to the additive model, sex-associated changes in mRNA are less locally regulated, and we begin to see more distant eQTL peaks. Similarily sex-interactive pQTL show very little local regulation.<br> <br></p>
+<p><br> We plotted the sex-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Compared to the additive model, sex-associated changes in mRNA are less locally regulated, and we begin to see more distant eQTL peaks. Similarly sex-interactive pQTL show very little local regulation.<br> <br></p>
 <p><img src="analysis_files/figure-html/sex-interactive%20QTL-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="age-interactive-eqtl-and-pqtl" class="section level2">
 <h2><span class="header-section-number">6.4</span> . Age-interactive eQTL and pQTL</h2>
-<p><br> We plotted the age-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Age-associated changes in gene and protein expression are mainly regulated by distant genes, and we begin to see dark vertical band. This vertical custer of eQTL on distal chromosome 12, indicate that a gene/genes on chromosome 12 pleiotropically regulates the age-associated changes in mRNA expression of many genes. Similarily, in the pQTL global map, a distant band on distal chromosome 15 seem to have similar effects on age-associated changes in protein expression. <br> <br></p>
+<p><br> We plotted the age-interactive eQTL and pQTL for genes with a LOD score &gt; 7.5. Age-associated changes in gene and protein expression are mainly regulated by distant genes, and we begin to see dark vertical band. This vertical cluster of eQTL on distal chromosome 12, indicate that a gene/genes on chromosome 12 pleiotropically regulates the age-associated changes in mRNA expression of many genes. Similarly, in the pQTL global map, a distant band on distal chromosome 15 seem to have similar effects on age-associated changes in protein expression. <br> <br></p>
 <p><img src="analysis_files/figure-html/age-interactive%20QTL-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="session-information" class="section level1">
 <h1><span class="header-section-number">7</span> . Session Information</h1>
+<pre class="r"><code># Last updated:
+format(Sys.time(), &#39;%d %B, %Y&#39;)</code></pre>
+<pre><code>## [1] &quot;15 October, 2018&quot;</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.6
+## Running under: macOS  10.14
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
