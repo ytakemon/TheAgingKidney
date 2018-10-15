@@ -2,13 +2,47 @@
 title: "About"
 ---
 
-The work contained here has been collaboratively conducted by the [Korstanje Lab](https://www.jax.org/research-and-faculty/research-labs/the-korstanje-lab) and [Churchill Lab](https://www.jax.org/research-and-faculty/research-labs/the-churchill-lab) at [The Jackson Laboratory](https://www.jax.org/). We used the [Diversity Outbred](https://www.jax.org/strain/009376) mice, a powerful genetic resource for high resolution mapping, to model renal aging in a geneticaly diverse population.
+<!-- Adding column to style page --> 
+<style>
+  .col2 {
+    columns: 2 200px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;    /* firefox */
+  }
+  .col3 {
+    columns: 3 100px;
+    -webkit-columns: 3 100px;
+    -moz-columns: 3 100px;
+  }
+</style>
+<!-- end of style --> 
+
+The work contained here has been collaboratively conducted by the [Korstanje Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-korstanje-lab), [Churchill Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-churchill-lab), and the [Gygi Lab (Harvard Medical School)](https://gygi.med.harvard.edu/).
+
+We used the [Diversity Outbred](https://www.jax.org/strain/009376) mice, a powerful genetic resource for high resolution mapping, to model both transcriptomic and proteomic changes that occur during renal aging in a genetically diverse population.
 
 This online resource provides source code used to conduct analyses and produce figures and tables that appear in our publication.
+<br>
 
+## People
 
+<div class="col2">
+* [Yuka Takemon]()
+* [Joel M. Chick]()
+* [Petr Simecek]()
+* [Daniel M. Gatti](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-gatti)
+* [Daniel Skelly](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-skelly)
+* [Olivier Devugyst]()
+* [Steven P. Gygi](http://cellbio.med.harvard.edu/people/faculty/gygi)
+* [Gary A. Churchill](https://www.jax.org/research-and-faculty/faculty/gary-churchill)
+* [Ron Korstanje](https://www.jax.org/research-and-faculty/faculty/ron-korstanje)
+</div>
+<br>
 
-Current status: <span style="color:red">"Manuscript in preparation"</span>
+## Publication
 
-Last updated:
-`r format(Sys.time(), '%d %B, %Y')`
+* Manuscript status: <span style="color:red">"Manuscript in preparation"</span>
+* [QTLViewr]()
+
+<br>
+Last updated: `r format(Sys.time(), '%d %B, %Y')`

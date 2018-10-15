@@ -1,5 +1,4 @@
 ### Proteomic and RNA Profiling Reveal Distinct Modes of Aging in Kidney
-<br>
 
 #### Important links
 
@@ -11,7 +10,7 @@
 [paper]: https://ytakemon.github.io/TheAgingKidney/
 [GSEXXXX]: https://ytakemon.github.io/TheAgingKidney/
 
-## Project organization
+#### Project organization
 
 * `data/` contains data used to produce results.
 * `analysis/` contains the R Markdown files documenting results.
