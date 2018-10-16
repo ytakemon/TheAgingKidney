@@ -41,8 +41,8 @@ The following bash script is designed to submit an Rscript to a cluster that uti
 The files needed are provided  <span style="color:red"> HERE:</span>
 
 * [DO188b_kidney_noprobs.RData](https://github.com/ytakemon/TheAgingKidney/tree/master/data/)
-* [anova_tests_slope_pairs.R](https://github.com/ytakemon/TheAgingKidney/tree/master/Rsource/anova_tests_slope_pairs.R)
-* [Rsubmit_args.sh](https://github.com/ytakemon/TheAgingKidney/tree/master/Rsource/[Rsubmit_args.sh)
+* [anova_tests_slope_pairs.R](https://github.com/ytakemon/TheAgingKidney/tree/master/source/anova_tests_slope_pairs.R)
+* [Rsubmit_args.sh](https://github.com/ytakemon/TheAgingKidney/tree/master/source/Rsubmit_args.sh)
 
 ```{bash qsub ANOVA analysis, eval= FALSE }
 # Make sure correct paths and used and paste below into cluster to run:
@@ -134,7 +134,7 @@ We can illustrate the direction of change in mRNA and protein expression with ag
 
 ```{r SlopePlot, echo = FALSE, message=FALSE, fig.height = 5, fig.width= 5, fig.align = "center"}
 # Calculate and create plot using source
-source("./Rsource/SlopePlot.R")
+source("./source/SlopePlot.R")
 # show plot
 print(SlopePlot)
 ```
@@ -154,7 +154,7 @@ knitr::include_graphics("images/EcoFallacy_v2.png")
 ```
 
 ```{r Example Eco Fallacies, echo = FALSE, message= FALSE}
-source("./Rsource/EcoFallacy.R")
+source("./source/EcoFallacy.R")
 ```
 <br>
 We picked *Slc5a12* and *Flot1* as the best examples to demonstrate this ecological fallacy.  
@@ -179,7 +179,7 @@ From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc3
 
 ```{r phenotyp, echo = FALSE, message = FALSE, warning = FALSE}
 # source file that contains code for plots below
-source("./Rsource/Phenotype.R")
+source("./source/Phenotype.R")
 ```
 
 ##\. *Slc34a1* and  *Slc34a3*
@@ -330,8 +330,8 @@ We see strong clusters of eQTL and pQTL on the diagonal axis, indicating that a 
 
 ```{r additive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
 library(grid)
-source("./Rsource/eQTL_add.R")
-source("./Rsource/pQTL_add.R")
+source("./source/eQTL_add.R")
+source("./source/pQTL_add.R")
 pushViewport(viewport( layout = grid.layout(10,10)))
 print(mPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 1:5))
 print(pPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 6:10))
@@ -345,8 +345,8 @@ We plotted the sex-interactive eQTL and pQTL for genes with a LOD score > 7.5. C
 <br>
 
 ```{r sex-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
-source("./Rsource/eQTL_sexint.R")
-source("./Rsource/pQTL_sexint.R")
+source("./source/eQTL_sexint.R")
+source("./source/pQTL_sexint.R")
 pushViewport(viewport( layout = grid.layout(10,10)))
 print(mPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 1:5))
 print(pPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 6:10))
@@ -360,8 +360,8 @@ We plotted the age-interactive eQTL and pQTL for genes with a LOD score > 7.5. A
 <br>
 
 ```{r age-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
-source("./Rsource/eQTL_ageint.R")
-source("./Rsource/pQTL_ageint.R")
+source("./source/eQTL_ageint.R")
+source("./source/pQTL_ageint.R")
 pushViewport(viewport( layout = grid.layout(10,10)))
 print(mPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 1:5))
 print(pPlot, vp = viewport(layout.pos.row = 1:8, layout.pos.col = 6:10))

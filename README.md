@@ -14,3 +14,4 @@
 
 * `data/` contains data used to produce results.
 * `analysis/` contains the R Markdown files documenting results.
+* `source/` contains source scripts used in the analysis.
