@@ -18,6 +18,10 @@ output:
 </span>
 <br>
 
+```{r Setup, echo=FALSE}
+wd <- "~/Dropbox/TheAgingKidneyData/"
+```
+
 #\. Overall study design
 We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels). 
 
@@ -25,20 +29,20 @@ We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) a
 knitr::include_graphics("images/StudyDesign.png")
 ```
 
-#\. mRNA and protein that change with age
+#\. Changes in mRNA and protein with age
 We fitted a linear model for all 6,667 genes with both mRNA and protein expression information. 
 
-$$ y_{i} \sim Age + Sex + Generation $$
+$$ y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} $$
 From linear model, we recorded slope and p-value generated from each mRNA and protein in the downstream processes. Additionally for a subset of genes with both mRNA and protein information, we also extracted the slope coefficient from.
 
-##\. Running linear regression script
+##\. Running linear regression
 The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. 
 
 The files needed are provided  <span style="color:red"> HERE:</span>
 
-* DO188b_kidney_noprobs.RData
-* anova_tests_slope_pairs.R
-* Rsubmit_args.sh
+* [DO188b_kidney_noprobs.RData](https://github.com/ytakemon/TheAgingKidney/tree/master/data/)
+* [anova_tests_slope_pairs.R](https://github.com/ytakemon/TheAgingKidney/tree/master/Rsource/anova_tests_slope_pairs.R)
+* [Rsubmit_args.sh](https://github.com/ytakemon/TheAgingKidney/tree/master/Rsource/[Rsubmit_args.sh)
 
 ```{bash qsub ANOVA analysis, eval= FALSE }
 # Make sure correct paths and used and paste below into cluster to run:
@@ -56,7 +60,7 @@ We found that sex effect on mRNA was stronger than the effects of Age, which is 
 # load libraries and data
 library(tidyverse)
 library(gridExtra)
-data <- read_csv("~/Dropbox/TheAgingKidneyData/ANOVA/kidney_anova_slope_output.csv")
+data <- read_csv(paste0(wd,"ANOVA/kidney_anova_slope_output.csv"))
 ```
 
 ###\. Effects on mRNA
@@ -166,7 +170,7 @@ In contrast to *Slc5a12*, *Flot1* is an example where by the mRNA expression inc
 <br>
 <br>
 
-#\. Relating changes in mRNA and protein to renal physiology
+#\. Relating to renal physiology
 
 In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice. 
 From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc34a3*, and *Lrp2* in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level. 
@@ -178,15 +182,15 @@ From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc3
 source("./Rsource/Phenotype.R")
 ```
 
-##\. *Slc34a1* and  *Slc34a3* expression levels
-###\. Global level
+##\. *Slc34a1* and  *Slc34a3*
+###\. Global changes with age
 *Slc34a1* and  *Slc34a3* each encode a phosphate co-transporter (NPT2C and NPT2A) in localized in the proximal tubule for phosphate reabsorption. For both genes we observe we confirmed global expression levels of decreasing mRNA and increasing protein levels for both females and males.
 <br>
 ```{r Slc34 expression with age , echo = FALSE, message = FALSE, warning = FALSE, fig.height = 5, fig.width= 7, fig.align = "center"}
 grid.arrange(Slca1_m,Slca1_p,Slca3_m,Slca3_p, ncol = 2)
 ```
 
-###\. Individual age group level 
+###\. Individual age group changes  
 <br>
 We also observe positive correlation between mRNA and protein levels at individual age groups. Both *Slc34a1* and  *Slc34a3* show a shift towards the top-left corner with increasing age, which is reflective of the observations made at the whole population level.
 <br>
@@ -202,8 +206,8 @@ As expected for mediators of phosphate reabsorption, we confirmed an increase in
 grid.arrange(Slca1_pPhos,Slca3_pPhos, ncol = 2)
 ```
 
-##\. Lrp2 expression levels
-###\. Global levels
+##\. *Lrp2* (Megalin)
+###\. Global changes with age
 <br>
 *Lrp2* encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule. 
 Similar to *Slc34a1* and  *Slc34a3* the global levels of *Lrp2* mRNA and protein are respectively decreasing and increasing with age. 
@@ -212,7 +216,7 @@ Similar to *Slc34a1* and  *Slc34a3* the global levels of *Lrp2* mRNA and protein
 grid.arrange(Lrp2_m,Lrp2_p, ncol = 2)
 ```
 
-###\. Individual age group level 
+###\. Individual age group changes 
 <br>
 We also observe the global trend reflected individually with age, driven by the top-left shift with increasing age. Additionally we also observe overall higher expression level of both *Lrp2* mRNA and protein in females (circle).  
 <br>
@@ -220,7 +224,7 @@ We also observe the global trend reflected individually with age, driven by the 
 print(Lrp2_mp)
 ```
 
-###\. *Lrp2* compared to urinary albumin levels
+###\. *Lrp2* and urinary albumin levels
 <br>
 We were able to measure albumin levels form 120 DO mice. 90 of these mice had urinary albumin levels < 1 mg/dL and 67 animals had 0 mg/dL or below detection levels of urinary albumin. This lack of detectable albumin heavily skewed our data as it can be seen in the plot below. As these DO animals were not specifically genetically engineered to develop renal failure, we only expect a few animals with albuminuria. In our cohort of 188 DO mice, we have 5 animals with microalbuminuria (> 30 mg/dL of urinary albumin).
 <br>
@@ -229,9 +233,9 @@ print(Lrp2_pAlb)
 ```
 <br>
 
-#\. eQTL and pQTL to identifying age associated changes in expression.
+#\.Drivers of transcriptomic and proteomic changes.
 <br> 
-Using mRNA expression (eQTL) and protein expression (pQTL) as phenotypes in a quantitative trait loci (QTL) mapping approach, we were able to identify regions that regulate age/sex-associated changes in gene expression.
+Using mRNA expression (eQTL) and protein expression (pQTL) as phenotypes in a quantitative trait loci (QTL) mapping approach, we were able to identify regions that regulate age- and sex-associated changes in gene expression.
 <br> 
 For more information on QTL analyses, [Karl Broman](https://kbroman.org/)'s [R/qtl2](https://kbroman.org/qtl2/) [user guide](https://kbroman.org/qtl2/assets/vignettes/user_guide.html) is great resource for understanding and getting started with QTL scans.
 <br> 
@@ -341,7 +345,6 @@ We plotted the sex-interactive eQTL and pQTL for genes with a LOD score > 7.5. C
 <br>
 
 ```{r sex-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
-library(grid)
 source("./Rsource/eQTL_sexint.R")
 source("./Rsource/pQTL_sexint.R")
 pushViewport(viewport( layout = grid.layout(10,10)))
@@ -357,7 +360,6 @@ We plotted the age-interactive eQTL and pQTL for genes with a LOD score > 7.5. A
 <br>
 
 ```{r age-interactive QTL, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 7, fig.width= 10, fig.align = "center"}
-library(grid)
 source("./Rsource/eQTL_ageint.R")
 source("./Rsource/pQTL_ageint.R")
 pushViewport(viewport( layout = grid.layout(10,10)))
