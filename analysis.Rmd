@@ -8,11 +8,10 @@ output:
         collapsed: false
         smooth_scroll: false
 ---
-<span style="color:red">
+<br>
+<span style="color:red">**TO DO LIST:**
 
-**TO DO LIST:**
-
-* upload data and scripts
+* upload data
 * change paths to uploaded data
 
 </span>
