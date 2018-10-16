@@ -330,7 +330,7 @@ div.tocify {
 <p>For this analysis we used:</p>
 <ul>
 <li><a href="https://github.com/ytakemon/TheAgingKidney/tree/master/data/">DO188b_kidney_noprobs.RData</a></li>
-<li><a href="https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/ANOVA_slope_plot_pairs.R">anova_tests_slope_pairs.R</a></li>
+<li><a href="https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/ANOVA_tests_slope_pairs.R">anova_tests_slope_pairs.R</a></li>
 <li><a href="https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/Rsubmit_args.sh">Rsubmit_args.sh</a></li>
 </ul>
 <pre class="bash"><code># Make sure correct paths and used and paste below into cluster to run:
@@ -430,7 +430,7 @@ load(&quot;./RNAseq_data/DO188b_kidney.RData&quot;)
 
 # Reformat from DOQTL format to meet qtl2 format specification
 probs &lt;- probs_doqtl_to_qtl2(genoprobs, snps, pos_column = &quot;bp&quot;)
-snps$chr &lt;- as.character(snps$chr) 
+snps$chr &lt;- as.character(snps$chr)
 snps$chr[snps$chr==&quot;X&quot;] &lt;- &quot;20&quot; #change to numeric for creating map later
 map &lt;- map_df_to_list(map = snps, pos_column = &quot;bp&quot;)
 
@@ -458,7 +458,7 @@ age_intcovar &lt;- model.matrix(~ Age, data = annot.samples)
                intcovar=age_intcovar[,-1], # replace with sex_intcovar for sex-interaction
                cores=3,
                reml=TRUE)
-  
+
 # get marker with maximum LOD score difference between full and additive scans:
   maxMarker &lt;- function(full, add){
     diff &lt;- as.data.frame(full)

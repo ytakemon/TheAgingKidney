@@ -22,7 +22,7 @@ wd <- "~/Dropbox/TheAgingKidneyData/"
 ```
 
 #\. Overall study design
-We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels). 
+We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) at 6, 12, and 18 months of age (63, 62, and 63 animals respectively). The right kidney was homogenized and an aliquot was used for RNA-sequencing and another for shotgun proteomics. A week prior to sacrifice, we also collected urine samples for renal physiological phenotyping (albumin, phosphate, and creatinine levels).
 
 ```{r StudyDesign, echo=FALSE, out.width = '80%', fig.align = "center"}
 knitr::include_graphics("images/StudyDesign.png")
@@ -34,18 +34,18 @@ We have provided a copy of our [data](https://ytakemon.github.io/TheAgingKidney/
 <br>
 
 #\. Changes in mRNA and protein with age
-We fitted a linear model for all 6,667 genes with both mRNA and protein expression information. 
+We fitted a linear model for all 6,667 genes with both mRNA and protein expression information.
 
 $$ y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} $$
 From linear model, we recorded slope and p-value generated from each mRNA and protein in the downstream processes. Additionally for a subset of genes with both mRNA and protein information, we also extracted the slope coefficient from.
 
 ##\. Running linear regression
-The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. 
+The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order.
 
-For this analysis we used: 
+For this analysis we used:
 
 * [DO188b_kidney_noprobs.RData](https://github.com/ytakemon/TheAgingKidney/tree/master/data/)
-* [anova_tests_slope_pairs.R](https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/ANOVA_slope_plot_pairs.R)
+* [anova_tests_slope_pairs.R](https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/ANOVA_tests_slope_pairs.R)
 * [Rsubmit_args.sh](https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/Rsubmit_args.sh)
 
 ```{bash qsub ANOVA analysis, eval= FALSE }
@@ -119,7 +119,7 @@ pval_mRNA_int <- ggplot(data, aes(x=p.mRNA_Interaction)) +
          subtitle="mRNA/(Age*Sex)",
          x="p-value")
 
-# Generate protein - Age:Sex Interaction plot 
+# Generate protein - Age:Sex Interaction plot
 pval_protein_int <- ggplot(data, aes(x=p.Prot_Interaction)) +
     geom_histogram(binwidth=0.04) +
     theme_bw() +
@@ -176,8 +176,8 @@ In contrast to *Slc5a12*, *Flot1* is an example where by the mRNA expression inc
 
 #\. Relating to renal physiology
 
-In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice. 
-From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc34a3*, and *Lrp2* in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level. 
+In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice.
+From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc34a3*, and *Lrp2* in group D to be of particular interest. Genes in group D have decreasing mRNA expression and increasing protein expression increasing with age at the whole population level.
 
 <br>
 
@@ -213,14 +213,14 @@ grid.arrange(Slca1_pPhos,Slca3_pPhos, ncol = 2)
 ##\. *Lrp2* (Megalin)
 ###\. Global changes with age
 <br>
-*Lrp2* encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule. 
-Similar to *Slc34a1* and  *Slc34a3* the global levels of *Lrp2* mRNA and protein are respectively decreasing and increasing with age. 
+*Lrp2* encodes for megalin, a receptor for albumin reabsorption also localized in the proximal tubule.
+Similar to *Slc34a1* and  *Slc34a3* the global levels of *Lrp2* mRNA and protein are respectively decreasing and increasing with age.
 <br>
 ```{r Lrp2 global, echo = FALSE, message = FALSE, warning = FALSE,fig.height = 3, fig.width= 7, fig.align = "center"}
 grid.arrange(Lrp2_m,Lrp2_p, ncol = 2)
 ```
 
-###\. Individual age group changes 
+###\. Individual age group changes
 <br>
 We also observe the global trend reflected individually with age, driven by the top-left shift with increasing age. Additionally we also observe overall higher expression level of both *Lrp2* mRNA and protein in females (circle).  
 <br>
@@ -238,15 +238,15 @@ print(Lrp2_pAlb)
 <br>
 
 #\.Drivers of transcriptomic and proteomic changes.
-<br> 
+<br>
 Using mRNA expression (eQTL) and protein expression (pQTL) as phenotypes in a quantitative trait loci (QTL) mapping approach, we were able to identify regions that regulate age- and sex-associated changes in gene expression.
-<br> 
+<br>
 For more information on QTL analyses, [Karl Broman](https://kbroman.org/)'s [R/qtl2](https://kbroman.org/qtl2/) [user guide](https://kbroman.org/qtl2/assets/vignettes/user_guide.html) is great resource for understanding and getting started with QTL scans.
-<br> 
+<br>
 
 ##\. Base R/qtl2 codes
-<br> 
-We calculated 3 different models of QTL: 
+<br>
+We calculated 3 different models of QTL:
 
 1. **Additive QTL** : Identifies loci that regulate gene expression.
 2. **Sex-interactive QTL** : Identifies loci that regulate sex-associated changes in gene expression.
@@ -262,7 +262,7 @@ $$ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Sex_{i}
 $$ Y_{i} \sim Age_{i} + Sex_{i} + Generation_{i} + QTL_{gi} + QTL_{gi} * Age_{i}$$
 <br>
 
-In R, the the basic R/qtl2 code used for both additive and interactive QTL scan are below. 
+In R, the the basic R/qtl2 code used for both additive and interactive QTL scan are below.
 ```{r Basic QTL code, eval= FALSE }
 # Load QTL2 library
 library(qtl2)
@@ -273,7 +273,7 @@ load("./RNAseq_data/DO188b_kidney.RData")
 
 # Reformat from DOQTL format to meet qtl2 format specification
 probs <- probs_doqtl_to_qtl2(genoprobs, snps, pos_column = "bp")
-snps$chr <- as.character(snps$chr) 
+snps$chr <- as.character(snps$chr)
 snps$chr[snps$chr=="X"] <- "20" #change to numeric for creating map later
 map <- map_df_to_list(map = snps, pos_column = "bp")
 
@@ -301,7 +301,7 @@ age_intcovar <- model.matrix(~ Age, data = annot.samples)
                intcovar=age_intcovar[,-1], # replace with sex_intcovar for sex-interaction
                cores=3,
                reml=TRUE)
-  
+
 # get marker with maximum LOD score difference between full and additive scans:
   maxMarker <- function(full, add){
     diff <- as.data.frame(full)

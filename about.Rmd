@@ -42,7 +42,7 @@ This online resource provides source code used to conduct analyses and produce f
 ## Publication
 
 * Manuscript status: <span style="color:red">"Manuscript in preparation"</span>
-* [QTLViewr]()
+* [QTLViewer]()
 
 <br>
 Last updated: `r format(Sys.time(), '%d %B, %Y')`
