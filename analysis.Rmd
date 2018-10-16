@@ -29,6 +29,11 @@ We collected kidneys from 188 Diversity Outbred mice (93 females and 95 males) a
 knitr::include_graphics("images/StudyDesign.png")
 ```
 
+#\. Data access
+We have provided a copy of our [data](https://ytakemon.github.io/TheAgingKidney/data.html) and [code](https://github.com/ytakemon/TheAgingKidney/tree/master/docs/source) on our [GitHub repository](https://github.com/ytakemon/TheAgingKidney).
+
+<br>
+
 #\. Changes in mRNA and protein with age
 We fitted a linear model for all 6,667 genes with both mRNA and protein expression information. 
 
@@ -38,11 +43,11 @@ From linear model, we recorded slope and p-value generated from each mRNA and pr
 ##\. Running linear regression
 The following bash script is designed to submit an Rscript to a cluster that utilizes PBS submission. You must submit the .Rdata and name the output file in this order. 
 
-The files needed are provided  <span style="color:red"> HERE:</span>
+For this analysis we used: 
 
 * [DO188b_kidney_noprobs.RData](https://github.com/ytakemon/TheAgingKidney/tree/master/data/)
-* [anova_tests_slope_pairs.R](https://github.com/ytakemon/TheAgingKidney/tree/master/source/anova_tests_slope_pairs.R)
-* [Rsubmit_args.sh](https://github.com/ytakemon/TheAgingKidney/tree/master/source/Rsubmit_args.sh)
+* [anova_tests_slope_pairs.R](https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/ANOVA_slope_plot_pairs.R)
+* [Rsubmit_args.sh](https://raw.githubusercontent.com/ytakemon/TheAgingKidney/master/source/Rsubmit_args.sh)
 
 ```{bash qsub ANOVA analysis, eval= FALSE }
 # Make sure correct paths and used and paste below into cluster to run:

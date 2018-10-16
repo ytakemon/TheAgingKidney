@@ -1,9 +1,13 @@
 # R/3.4.1
 library(dplyr)
 library(ggplot2)
-args <- commandArgs(trailingOnly = TRUE) # args <- "kidney_anova_slope_output.csv"
-setwd("/projects/korstanje-lab/ytakemon/JAC_DO_Kidney/")
-load("RNAseq_data/DO188b_kidney_noprobs.RData")
+args <- commandArgs(trailingOnly = TRUE) 
+
+wd <- "User working directory here"
+setwd(wd)
+
+# load data
+load("./RNAseq_data/DO188b_kidney_noprobs.RData")
 output <- list.files(path = "./Anova_output/", pattern = paste0("^",args[[1]]), recursive = TRUE)
 data <- read.csv(paste0("./Anova_output/",output[[1]]), header = T)
 
