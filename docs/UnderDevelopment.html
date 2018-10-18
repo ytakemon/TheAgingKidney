@@ -9,14 +9,13 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Yuka Takemon" />
 
 
-<title>UnderDevelopment</title>
+<title>Development</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -91,6 +90,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -100,34 +102,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 </style>
 
@@ -178,13 +180,12 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="data.html">Data</a></li>
         <li><a href="analysis.html">Analyses</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/TheJacksonLaboratory/TheAgingKidney">GitHub</a></li>
+        <li><a href="https://github.com/ytakemon/TheAgingKidney">GitHub</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -194,318 +195,16 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">UnderDevelopment</h1>
-<h4 class="author"><em>Yuka Takemon</em></h4>
-<h4 class="date"><em>5/25/2018</em></h4>
+<h1 class="title toc-ignore">Development</h1>
 
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.4
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
-## ✔ tidyr   0.8.0     ✔ stringr 1.3.0
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(gridExtra)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;gridExtra&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     combine</code></pre>
-<pre class="r"><code>library(ggsci)
-setwd(&quot;~/Dropbox/TheAgingKidneyData&quot;)
-load(&quot;./RData/DO188b_kidney_noprobs.RData&quot;)
-Upheno &lt;- read.delim(&quot;./Phenotype/JAC_CS_urine_chem_v1.txt&quot;, sep = &quot;\t&quot;)
+<p>Develop code here to test and deploy. This page is not indexed and will not be accessible unless the link is known.</p>
+<p>The link here is: <a href="https://ytakemon.github.io/TheAgingKidney/UnderDevelopment.html" class="uri">https://ytakemon.github.io/TheAgingKidney/UnderDevelopment.html</a></p>
+<p><br></p>
 
-pheno &lt;- Upheno %&gt;%
-         mutate(
-           Mouse.ID = mouse.id,
-           duplicated = (duplicated(Upheno$mouse.id) | duplicated(Upheno$mouse.id, fromLast = TRUE)),
-           Alb = ma.u,
-           Phs = phs.u) %&gt;%
-         filter((Mouse.ID %in% annot.samples$Mouse.ID) &amp; duplicated == FALSE) %&gt;%
-         select(Mouse.ID, Alb, Phs)
-
-
-annot.samples &lt;- annot.samples[annot.samples$Mouse.ID %in% pheno$Mouse.ID,]
-expr.mrna &lt;- expr.mrna[rownames(expr.mrna) %in% pheno$Mouse.ID,]
-expr.protein &lt;- expr.protein[rownames(expr.protein) %in% pheno$Mouse.ID,]
-
-# Identify gene name
-gene1m &lt;- annot.mrna[annot.mrna$symbol == &quot;Slc34a1&quot;,]$id
-gene1p &lt;- annot.protein[annot.protein$symbol == &quot;Slc34a1&quot;,]$id
-gene2m &lt;- annot.mrna[annot.mrna$symbol == &quot;Slc34a3&quot;,]$id
-gene2p &lt;- annot.protein[annot.protein$symbol == &quot;Slc34a3&quot;,]$id
-gene3m &lt;- annot.mrna[annot.mrna$symbol == &quot;Lrp2&quot;,]$id
-gene3p &lt;- annot.protein[annot.protein$symbol == &quot;Lrp2&quot;,]$id
-
-df &lt;- annot.samples %&gt;%
-      mutate(
-        Slc34a1_mRNA = expr.mrna[, gene1m],
-        Slc34a1_protein = expr.protein[, gene1p],
-        Slc34a3_mRNA = expr.mrna[, gene2m],
-        Slc34a3_protein = expr.protein[, gene2p],
-        Lrp2_mRNA = expr.mrna[, gene3m],
-        Lrp2_protein = expr.protein[, gene3p],
-        Sex = as.factor(Sex),
-        Generation = factor(Generation, levels = c(&quot;G8&quot;,&quot;G9&quot;,&quot;G10&quot;,&quot;G11&quot;,&quot;G12&quot;)),
-        Age = factor(as.character(Age), levels = c(&quot;6&quot;,&quot;12&quot;,&quot;18&quot;)),
-        Alb = pheno$Alb,
-        Phs = pheno$Phs) %&gt;%
-      select(Mouse.ID, Sex, Generation, Age, Slc34a1_mRNA, Slc34a1_protein, Slc34a3_mRNA, Slc34a3_protein, Lrp2_mRNA, Lrp2_protein, Alb, Phs)
-
-#Slc34a1 protein ~ RNA
-df_r1c3 &lt;- df %&gt;%
-  mutate(
-    Fitted = fitted(lm(Slc34a1_protein ~ Sex+Age+Slc34a1_mRNA+Sex:Age, data=.)))
-
-df_r1c3_summary &lt;- df_r1c3 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Slc34a1_mRNA), sdRNA=sd(Slc34a1_mRNA),
-    mProtein=mean(Slc34a1_protein), sdProtein=sd(Slc34a1_protein), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r1c3 &lt;- ggplot(df_r1c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r1c3, aes(x=Slc34a1_mRNA, y=Slc34a1_protein), alpha = 0.6) +
-  geom_line(data=df_r1c3, aes(x = Slc34a1_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Slc34a1 protein&quot;,
-       x = &quot;Slc34a1 mRNA&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a3 protein ~ RNA
-df_r2c3 &lt;- df %&gt;% filter(!is.na(df$Slc34a3_protein)) %&gt;%
-    mutate( Fitted = fitted(lm(Slc34a3_protein ~ Sex+Age+Slc34a3_mRNA+Sex:Age, data=.)))
-
-df_r2c3_summary &lt;- df_r2c3 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Slc34a3_mRNA), sdRNA=sd(Slc34a3_mRNA),
-    mProtein=mean(Slc34a3_protein), sdProtein=sd(Slc34a3_protein), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r2c3 &lt;- ggplot(df_r2c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r2c3, aes(x=Slc34a3_mRNA, y=Slc34a3_protein), alpha = 0.6) +
-  geom_line(data=df_r2c3, aes(x = Slc34a3_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Slc34a3 protein&quot;,
-       x = &quot;Slc34a3 mRNA&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-  theme_bw() +
-  scale_colour_aaas()
-
-#Lrp2 protein ~ RNA
-df_r3c3 &lt;- df %&gt;% filter(!is.na(df$Lrp2_protein)) %&gt;%
-    mutate( Fitted = fitted(lm(Lrp2_protein ~ Sex+Age+Lrp2_mRNA+Sex:Age, data=.)))
-
-df_r3c3_summary &lt;- df_r3c3 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Lrp2_mRNA), sdRNA=sd(Lrp2_mRNA),
-    mProtein=mean(Lrp2_protein), sdProtein=sd(Lrp2_protein), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r3c3 &lt;- ggplot(df_r3c3_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r3c3, aes(x=Lrp2_mRNA, y=Lrp2_protein), alpha = 0.6) +
-  geom_line(data=df_r3c3, aes(x = Lrp2_mRNA, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Lrp2 protein&quot;,
-       x = &quot;Lrp2 mRNA&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-  theme_bw() +
-  scale_colour_aaas()
-
-
-#Slc34a1 Phos ~ protein
-df_r1c4 &lt;- df %&gt;% filter(!is.na(Phs)) %&gt;%
-  mutate(
-    Fitted = fitted(lm(Phs ~ Sex+Age+Slc34a1_protein+Sex:Age, data=.)))
-
-df_r1c4_summary &lt;- df_r1c4 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Slc34a1_protein), sdRNA=sd(Slc34a1_protein),
-    mProtein=mean(Phs), sdProtein=sd(Phs), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r1c4 &lt;- ggplot(df_r1c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r1c4, aes(x=Slc34a1_protein, y=Phs), alpha = 0.6) +
-  geom_line(data=df_r1c4, aes(x = Slc34a1_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Phosphate&quot;,
-       x = &quot;Slc34a1 protein&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-  coord_cartesian(ylim = c(0,800))+
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a1 Phos ~ protein
-df_r2c4 &lt;- df %&gt;% filter(!is.na(Phs) &amp; !is.na(Slc34a3_protein)) %&gt;%
-  mutate(
-    Fitted = fitted(lm(Phs ~ Sex+Age+Slc34a3_protein+Sex:Age, data=.)))
-
-df_r2c4_summary &lt;- df_r2c4 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Slc34a3_protein), sdRNA=sd(Slc34a3_protein),
-    mProtein=mean(Phs), sdProtein=sd(Phs), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r2c4 &lt;- ggplot(df_r2c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r2c4, aes(x=Slc34a3_protein, y=Phs), alpha = 0.6) +
-  geom_line(data=df_r2c4, aes(x = Slc34a3_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Phosphate&quot;,
-       x = &quot;Slc34a3 protein&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-  coord_cartesian(ylim = c(0,800))+
-  theme_bw() +
-  scale_colour_aaas()
-
-#Slc34a1 Phos ~ protein
-df_r3c4 &lt;- df %&gt;% filter(!is.na(Alb) &amp; !is.na(Lrp2_protein)) %&gt;%
-  mutate(
-    Fitted = fitted(lm(Alb ~ Sex+Age+Lrp2_protein+Sex:Age, data=.)))
-
-df_r3c4_summary &lt;- df_r3c4 %&gt;%
-  group_by(Sex, Age) %&gt;%
-  summarize(mRNA=mean(Lrp2_protein), sdRNA=sd(Lrp2_protein),
-    mProtein=mean(Alb), sdProtein=sd(Alb), N=n() ) %&gt;%
-  mutate(seRNA = sdRNA/sqrt(N), seProtein = sdProtein/sqrt(N))
-
-plot_r3c4 &lt;- ggplot(df_r3c4_summary, aes(x=mRNA, y=mProtein, color=Age, shape=Sex), size=4) +
-  geom_point(size=4) +
-  geom_errorbar(aes(ymin=mProtein-seProtein, ymax=mProtein+seProtein),size=1) +
-  geom_errorbarh(aes(xmin=mRNA-seRNA, xmax=mRNA+seRNA),size=1) +
-  geom_point(data=df_r3c4, aes(x=Lrp2_protein, y=Alb), alpha = 0.6) +
-  geom_line(data=df_r3c4, aes(x = Lrp2_protein, y = Fitted)) +
-  theme_bw() +
-  labs(y = &quot;Albumin&quot;,
-       x = &quot;Lrp2 protein&quot;) +
-  theme(panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        axis.line = element_line(color = &quot;black&quot;)) +
-#  coord_cartesian(ylim = c(0,20))+
-  theme_bw() +
-  scale_colour_aaas()
-
-## rest of plot
-r1c1 &lt;- ggplot(df, aes(Age, y = Slc34a1_mRNA, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Slc34a1 mRNA&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-r1c2 &lt;- ggplot(df, aes(Age, y = Slc34a1_protein, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Slc34a1 protein&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-r2c1 &lt;- ggplot(df, aes(Age, y = Slc34a3_mRNA, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Slc34a3 mRNA&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-r2c2 &lt;- ggplot(df, aes(Age, y = Slc34a3_protein, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Slc34a3 protein&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-r3c1 &lt;- ggplot(df, aes(Age, y = Lrp2_mRNA, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Lrp2 mRNA&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-r3c2 &lt;- ggplot(df, aes(Age, y = Lrp2_protein, colour = Sex)) +
-          geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = Sex, colour = Sex)) +
-          geom_point(position = position_jitterdodge(0.4)) +
-          theme_bw() +
-          labs(y = &quot;Lrp2 protein&quot;,
-               x = &quot;Age&quot;) +
-          theme(panel.background = element_blank(),
-                panel.grid.minor = element_blank(),
-                panel.grid.major = element_blank(),
-                panel.border = element_blank(),
-                axis.line = element_line(color = &quot;black&quot;)) +
-          scale_colour_aaas()
-
-grid.arrange(r1c1,r1c2,plot_r1c3,plot_r1c4, r2c1,r2c2,plot_r2c3,plot_r2c4, r3c1,r3c2,plot_r3c3,plot_r3c4, ncol = 4)</code></pre>
-<pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
-<pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="UnderDevelopment_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-
+<p>Copyright &copy; 2018 Yuka Takemon. MIT license.</p>
 
 
 
