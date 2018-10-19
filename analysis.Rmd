@@ -369,7 +369,6 @@ print(pdensity, vp = viewport(layout.pos.row = 9:10, layout.pos.col = 6:10))
 #\. Session Information
 
 ```{r session-info, echo = FALSE}
-print("Last updated:")
-format(Sys.time(), '%d %B, %Y')
 sessionInfo()
 ```
+Last updated: `r format(Sys.time(), '%d %B, %Y')`
