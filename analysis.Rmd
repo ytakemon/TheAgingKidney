@@ -9,16 +9,9 @@ output:
         smooth_scroll: false
 ---
 <br>
-<span style="color:red">**TO DO LIST:**
-
-* upload data
-* change paths to uploaded data
-
-</span>
-<br>
 
 ```{r Setup, echo=FALSE}
-wd <- "~/Dropbox/TheAgingKidneyData/"
+wd <- "~/Dropbox/JAX/TheAgingKidneyData/"
 ```
 
 #\. Overall study design
@@ -183,7 +176,7 @@ From the analysis conducted in previous sections, we identified *Slc34a1*, *Slc3
 
 ```{r phenotyp, echo = FALSE, message = FALSE, warning = FALSE}
 # source file that contains code for plots below
-source("./source/Phenotype.R")
+source("source/Phenotype.R")
 ```
 
 ##\. *Slc34a1* and  *Slc34a3*

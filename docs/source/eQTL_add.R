@@ -1,4 +1,4 @@
-eQTL_best <- read.csv("~/Dropbox/TheAgingKidneyData/QTLscan/mRNA/BestMarker_add_mrna.csv")
+eQTL_best <- read.csv(paste0(wd,"QTLscan/mRNA/BestMarker_add_mrna.csv"))
 
 # Using eQTL_best to create plot
 # need to reorder "chr" factors

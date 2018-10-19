@@ -1,5 +1,4 @@
-# R/3.4.1
-pQTL_best <- read.csv("~/Dropbox/TheAgingKidneyData/QTLscan/protein/BestMarker_add_protein_nobatch.csv")
+pQTL_best <- read.csv(paste0(wd,"QTLscan/protein/BestMarker_add_protein_nobatch.csv"))
 
 # Usinb pQTL_best to create plot
 # need to reorder "chr" factors

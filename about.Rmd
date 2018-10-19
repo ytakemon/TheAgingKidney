@@ -2,41 +2,53 @@
 title: "About"
 ---
 
-<!-- Adding column to style page --> 
-<style>
-  .col2 {
-    columns: 2 200px;         /* number of columns and width in pixels*/
-    -webkit-columns: 2 200px; /* chrome, safari */
-    -moz-columns: 2 200px;    /* firefox */
-  }
-  .col3 {
-    columns: 3 100px;
-    -webkit-columns: 3 100px;
-    -moz-columns: 3 100px;
-  }
-</style>
-<!-- end of style --> 
-
-The work contained here has been collaboratively conducted by the [Korstanje Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-korstanje-lab), [Churchill Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-churchill-lab), and the [Gygi Lab (Harvard Medical School)](https://gygi.med.harvard.edu/).
+The work contained here has been collaboratively conducted by the [Korstanje Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-korstanje-lab), [Churchill Lab (The Jackson Laboratory)](https://www.jax.org/research-and-faculty/research-labs/the-churchill-lab), and the [Gygi Lab (Harvard Medical School)](https://gygi.med.harvard.edu/) as a initiative driven by [The Jackson Aging Center](http://agingmice.jax.org/).
 
 We used the [Diversity Outbred](https://www.jax.org/strain/009376) mice, a powerful genetic resource for high resolution mapping, to model both transcriptomic and proteomic changes that occur during renal aging in a genetically diverse population.
 
-This online resource provides source code used to conduct analyses and produce figures and tables that appear in our publication.
+This online resource provides [source code](https://github.com/ytakemon/TheAgingKidney) used to [generate our results](https://ytakemon.github.io/TheAgingKidney/analysis.html) that appear in our [publication].
 <br>
 
 ## People
 
-<div class="col2">
-* [Yuka Takemon]()
-* [Joel M. Chick]()
-* [Petr Simecek]()
-* [Daniel M. Gatti](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-gatti)
-* [Daniel Skelly](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-skelly)
-* [Olivier Devugyst]()
-* [Steven P. Gygi](http://cellbio.med.harvard.edu/people/faculty/gygi)
-* [Gary A. Churchill](https://www.jax.org/research-and-faculty/faculty/gary-churchill)
-* [Ron Korstanje](https://www.jax.org/research-and-faculty/faculty/ron-korstanje)
+<div class="row">
+  <div class="col-md-4">
+  <center>
+
+![**[Yuka Takemon]()**](./images/Yuka.jpg)
+
+![**[Joel M. Chick]()**](./images/placeholder.jpg)
+
+![**[Petr Simecek]()**](./images/Petr.jpg)
+
+  </center>
+  </div>
+
+  <div class="col-md-4">
+  <center>
+
+![**[Daniel M. Gatti](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-gatti)**](./images/Dan.jpg)
+
+![**[Daniel Skelly](https://www.jax.org/research-and-faculty/faculty/research-scientists/daniel-skelly)**](./images/DanS.jpg)
+  
+![**[Olivier Devugyst]()**](./images/placeholder.jpg)
+
+  </center>
+  </div>
+  
+  <div class="col-md-4">
+  <center>
+
+![**[Steven P. Gygi](http://cellbio.med.harvard.edu/people/faculty/gygi)**](./images/placeholder.jpg)
+
+![**[Gary A. Churchill](https://www.jax.org/research-and-faculty/faculty/gary-churchill)**](./images/Gary.jpg)
+
+![**[Ron Korstanje](https://www.jax.org/research-and-faculty/faculty/ron-korstanje)**](./images/Ron.jpg)
+
+  </center>
+  </div>
 </div>
+
 <br>
 
 ## Publication

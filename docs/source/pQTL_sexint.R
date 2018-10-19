@@ -1,4 +1,4 @@
-best <- read.csv("~/Dropbox/TheAgingKidneyData/QTLscan/protein/BestMarker_SexInt_protein_nobatch.csv")
+best <- read.csv(paste0(wd,"QTLscan/protein/BestMarker_SexInt_protein_nobatch.csv"))
 
 # picking blunt threshold
 LODthreshold_diff <- 7.5

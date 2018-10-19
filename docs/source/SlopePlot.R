@@ -1,6 +1,6 @@
 # Load library and data
-load("~/Dropbox/TheAgingKidneyData/RData/DO188b_kidney_noprobs.RData")
-data <- read_csv("~/Dropbox/TheAgingKidneyData/ANOVA/kidney_anova_slope_output.csv")
+load(paste0(wd,"RData/DO188b_kidney_noprobs.RData"))
+data <- read_csv(paste0(wd,"ANOVA/kidney_anova_slope_output.csv"))
 
 # Subset to columns with slopes and pvalues
 mcols <- grep("^m.", colnames(data))

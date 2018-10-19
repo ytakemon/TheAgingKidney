@@ -1,4 +1,4 @@
-Upheno <- read.delim("~/Dropbox/TheAgingKidneyData/Phenotype/JAC_CS_urine_chem_v1.txt", sep = "\t")
+Upheno <- read.delim(paste0(wd,"Phenotype/JAC_CS_urine_chem_v1.txt"), sep = "\t")
 
 pheno <- Upheno %>%
   mutate(

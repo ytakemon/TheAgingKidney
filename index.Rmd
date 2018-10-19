@@ -1,12 +1,32 @@
 ---
-title: "The Aging Kidney Home Page"
+title: "The Aging Kidney"
 ---
-
-Hello world! <br>
-Contents will be filled soon.
+<br>
+      
+<div class="row">
+  <div class="col-md-4">
+  <center>
+## [About this project](https://ytakemon.github.io/TheAgingKidney/about.html)
+[![DO mice](./images/DOmice.jpg)](https://ytakemon.github.io/TheAgingKidney/about.html)
+  </center>
+  </div>
+  <div class="col-md-4"">
+  <center>
+## [Data access](https://ytakemon.github.io/TheAgingKidney/data.html)
+[![data](./images/data.jpg)](https://ytakemon.github.io/TheAgingKidney/data.html)
+  </center>
+  </div>
+  <div class="col-md-4"">
+  <center>
+## [Reproducible results](https://ytakemon.github.io/TheAgingKidney/analysis.html)
+[![results](./images/results.jpg)](https://ytakemon.github.io/TheAgingKidney/analysis.html)
+  </center>
+  </div>
+</div>
 
 <br>
 <br>
 
 Last updated:
 `r format(Sys.time(), '%d %B, %Y')`
+

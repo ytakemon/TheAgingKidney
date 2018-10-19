@@ -1,4 +1,4 @@
-m_best <- read.csv("~/Dropbox/TheAgingKidneyData/QTLscan/mRNA/BestMarker_AgeInt_mrna.csv")
+m_best <- read.csv(paste0(wd,"QTLscan/mRNA/BestMarker_AgeInt_mrna.csv"))
 
 # picking blunt threshold
 LODthreshold_diff <- 7.5
