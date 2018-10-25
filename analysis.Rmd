@@ -167,6 +167,21 @@ In contrast to *Slc5a12*, *Flot1* is an example where by the mRNA expression inc
 <br>
 <br>
 
+#\. Age-related changes in protein expression are not mediated by mRNA expression
+
+In order to further clarify the role of transcriptional regulation in determining age-related changes in protein, we carried a mediation analysis between protein and its corresponding mRNA for 6,667 genes. 
+```{r Protein mediation, echo = FALSE, message=FALSE, fig.height = 4, fig.width= 7, fig.align = "center"}
+# Calculate and create plot using source
+source("./source/ProteinMed.R")
+# show plot
+print(plotmed)
+```
+
+We found that age-related changes in protein levels are not mediated by mRNA expression, however counter to this, many sex-related changes in protein levels are regulated by mRNA expression. 
+
+<br>
+<br>
+
 #\. Relating to renal physiology
 
 In addition to gene expression and protein expression quantification, we also measured metabolites in the urine samples (albumin, phosphate, and creatinine) collected from the same 188 animals 1 week prior to their sacrifice.
