@@ -1,6 +1,7 @@
 ### Proteomic and RNA Profiling Reveal Distinct Modes of Aging in Kidney
 
 The manuscript is now available at eLife. Please cite the following:
+
 Takemon et al. Proteomic and transcriptomic profiling reveal different aspects of aging in the kidney. eLife (2021)
 https://doi.org/10.7554/eLife.62585
 
